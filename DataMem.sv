@@ -7,6 +7,7 @@ module data_mem #(parameter AW=8, DW=8) (
 	input [DW-1:0] DataIn,
 	output logic[DW-1:0] DataOut);
 
+//The core
 logic [DW-1:0] mem_core [2**AW];
 
 always_comb 
