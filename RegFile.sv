@@ -21,9 +21,11 @@ assign rt_val_o = RF [rt];
 
 //synchronous (clocked) write to rs 
 always_ff @ (posedge clk)
-	if (write_enable)
-		RF [{0,rs}] <= write_data;
-	if (cout_write_enable)		
-		RF [111] <= cout_data;	//Write to COUT if signal is on
+  begin
+	   if (write_enable)
+		    RF [{0,rs}] <= write_data;
+	   if (cout_write_enable)		
+		    RF [3'b111] <= cout_data;	//Write to COUT if signal is on
+	end
 
 endmodule
