@@ -297,13 +297,13 @@ public class Programmer {
 	}
 
 	private static int register(String rx) {
-		return Integer.valueOf(str.replaceAll("[^0-9]", ""));
+		return Integer.valueOf(rx.replaceAll("[^0-9]", ""));
 	}
 	private static int immediate(String imm) {
-		return immediates[Integer.valueOf(imm)];
+		return immediates[Integer.valueOf(imm.replaceAll("[^0-9]", ""))];
 	}
 	private static int branch(String br) {
-		return branches[Integer.valueOf(br)];
+		return branches[Integer.valueOf(br.replaceAll("[^0-9]", ""))];
 	}
 
 	private static String to_bin(int n, int bits) {
