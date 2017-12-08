@@ -119,18 +119,18 @@ public class Assembler {
 	}
 
 	private static String register(String rx) {
-		return to_bin(Integer.valueOf(rx.substring(2, 3)), 2);
+		return to_bin(Integer.valueOf(str.replaceAll("[^0-9]", "")), 2);
 	}
 	private static String rs_rt(String[] line) {
 		String rs = register(line[1]);
 		String rt = register(line[2]);
-		return rs += rt;
+		return rt + rs;
 	}
 	private static String imme(String[] line) {
 		// imme $r0 4 -> put LUT 4 into $r0
 		String reg = register(line[1]);
 		String imm = to_bin(Integer.valueOf(line[2]), 5);
-		return reg += imm;
+		return imm + reg;
 	}
 	private static String branch(String[] line) {
 		// bne 32 -> (branch by 32nd lut entry)

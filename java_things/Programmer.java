@@ -297,7 +297,7 @@ public class Programmer {
 	}
 
 	private static int register(String rx) {
-		return Integer.valueOf(rx.substring(2, 3));
+		return Integer.valueOf(str.replaceAll("[^0-9]", ""));
 	}
 	private static int immediate(String imm) {
 		return immediates[Integer.valueOf(imm)];
