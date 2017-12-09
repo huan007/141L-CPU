@@ -1,2 +1,5 @@
 Machine-Code-Translations.docx
 *.DS_Store
+out/*
+out
+*.class

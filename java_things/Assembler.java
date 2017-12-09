@@ -7,20 +7,24 @@ import java.io.IOException;
 public class Assembler {
 	public static void main(String[] args) throws IOException {
 		try {
-			File f = new File("code.txt");
-			File o = new File("machine.txt");
+			String in = "code";
+			String out ="machine";
 			if (args.length == 2){
-				f = new File(args[0]);
-				o = new File(args[1]);
+				in = args[0];
+				out = args[1];
 			}
+			File f = new File(in + ".txt");
+			File o = new File("out/" + out + ".txt");
+			File o2 = new File("out/" + out + "_stripped.txt");
 			BufferedReader b = new BufferedReader(new FileReader(f));
 			BufferedWriter w = new BufferedWriter(new FileWriter(o));
+			BufferedWriter w2 = new BufferedWriter(new FileWriter(o2));
 			String readLine = "";
 			System.out.println("Reading file using Buffered Reader");
 			while ((readLine = b.readLine()) != null) {
 				String[] line = readLine.toLowerCase().split(" ");
 				String code = "";
-				switch (line[0]) {
+				switch (line[0].toLowerCase()) {
 					case "imme":
 						code = "10";
 						code += imme(line);
@@ -110,8 +114,12 @@ public class Assembler {
 				}
 				System.out.println(code + "\t\\\\ " + readLine);
 				w.write(code + "\t\\\\" + readLine + "\n");
+				if (!code.equals("")){
+					w2.write(code + "\n");
+				}
 			}
 			w.close();
+			w2.close();
 			b.close();
 		} catch (IOException e) {
 			e.printStackTrace();

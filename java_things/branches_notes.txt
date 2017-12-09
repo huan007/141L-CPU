@@ -1,0 +1,4 @@
+27 2smaller
+8 rshift
+7 rshiftend
+17 notoverflow
