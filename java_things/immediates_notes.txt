@@ -1,6 +1,6 @@
 0 int2fltMSH
 1 int2fltLSH
--1
+2
 3
 4
 5 INT2FLT MSHEND
@@ -12,21 +12,21 @@
 129 A2,
 130 B1,
 131 B2,
-14 LARGEEXP,
-15 DIFFEXP,
-16 LOWERSIG,
-17 UPPERSIG,
-18 UPPERSIGA
-19 UPPERSIGMASK,
+14 LARGEEXP, sloc (vairable)
+15 DIFFEXP (variable)
+16 LOWERSIG, (variable)
+17 UPPERSIG, (variable)
+18 UPPERSIGA (variable)
+19 UPPERSIGMASK, (variable)
 132 UPPER,
 133 LOWER
+64 f2i MSHLoc
+65 f2i LSHloc
 -1
--1
--1
-25 SIGNLOC
--1
--1
-64 f2i MSH
-65 f2i LSH
-66 f2i MSHend
+25 SignLoc
+127 7F
+255 FF
+28
 67 f2i LSHend
+66 f2i MSHend
+31 1F

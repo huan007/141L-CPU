@@ -5,11 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-// import java.lang.util.Random;
-// import static org.joou.Unsigned.*;
 
 public class Programmer {
-	private static final int MINMAX = 32768;
+	private static final int MINMAX = 65535;
 	private static final int C = 3;
 
 	private static int CMP = 0;
@@ -21,6 +19,8 @@ public class Programmer {
 	private static int PC = 0;
 	private static String[] IM;
 	private static Boolean halt = false;
+	private static Boolean errorflag = false;
+
 
 	// private static byte[] f2i = byte[2];
 	// private static byte[] i2f = byte[2];
@@ -45,12 +45,14 @@ public class Programmer {
 	private static void blt(int branch) {
 		if (CMP < 0) {
             // Jump by X
+			PC = PC + branch;
 		}
 	}
 
 	private static void bne(int branch) {
 		if (CMP != 0) {
             // Jump by X
+			PC = PC + branch;
 		}
 	}
 
@@ -152,7 +154,7 @@ public class Programmer {
 	}
 
 	private static void sw(int rs, int rt) {
-		MEM[(reg[rs] & 0xFF)] = reg[rt];
+		MEM[(reg[rt] & 0xFF)] = reg[rs];
 		creg[C] = 0;
 	}
 
@@ -168,17 +170,18 @@ public class Programmer {
 
 	private static void halt(int error) {
 		halt = true;
+		errorflag = (error != 0);
 		creg[C] = 0;
 	}
 
 	private static void fillMem() {
-		MEM = new byte[255];
+		MEM = new byte[256];
 
 		Random rn = new Random();
-		int r0 = rn.nextInt(MINMAX);
-		int r1 = rn.nextInt(MINMAX);
-		int r2 = rn.nextInt(MINMAX);
-		int r3 = rn.nextInt(MINMAX);
+		int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
+		int r1 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
+		int r2 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
+		int r3 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 
 		f2i = new Programmer().new Half(r0).getbytes();
 		add_a = new Programmer().new Half(r1).getbytes();
@@ -196,6 +199,8 @@ public class Programmer {
 		MEM[129] = add_a[1];
 		MEM[130] = add_b[0];
 		MEM[131] = add_b[1];
+
+		System.out.printf("Float: Int %d,%x,\t Float:%x%x\n", r0, r0, f2i[0], f2i[1]);
 
 		// 0 01111 0000000000 = 1
 		// 0 01111 0000000001 = 1 + 2−10 = 1.0009765625 (next smallest float after 1)
@@ -218,23 +223,26 @@ public class Programmer {
 
 	private static void test() {
 
-		Half i2f_h = new Programmer().new Half(i2f[0], i2f[1]);
-		Half i2f_r = new Programmer().new Half(MEM[5], MEM[6]);
-		System.out.printf("\nI2F:\t%s:\t %s, %s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
+		// Half i2f_h = new Programmer().new Half(i2f[0], i2f[1]);
+		// Half i2f_r = new Programmer().new Half(MEM[5], MEM[6]);
+		// System.out.printf("\nI2F:\t%s:\t %s, %s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
 
 		Half f2i_h = new Programmer().new Half(f2i[0], f2i[1]);
 		int actual = f2i_h.toInt();
-		int f2i_r = MEM[64] << 8 | MEM[65];
+		int f2i_r = ((MEM[66] << 8) | MEM[67]) & 0xFFFF;
+		if (errorflag) {
+			f2i_r |= 0x00010000;
+		}
 		System.out.printf("\nF2I:\t%s:\t %x, %x \t %x%x\n", String.valueOf(actual == f2i_r), actual, f2i_r, f2i[0], f2i[1]);
-
-		Half add_ah = new Programmer().new Half(add_a[0], add_a[1]);
-		Half add_bh = new Programmer().new Half(add_b[0], add_b[1]);
-		Half add_res = new Programmer().new Half(MEM[132], MEM[133]);
-		Half res = add_ah.add(add_bh);
-		System.out.printf("\n" + res.toString() + "\n");
-		System.out.printf("\n" + add_res.toString() + "\n");
-		System.out.printf("\n" + String.valueOf(res.equals(add_res)) + "\n");
-		System.out.printf("\nADD:\t%s:\t %s, %s, \t %x%x, %x%x\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
+        //
+		// Half add_ah = new Programmer().new Half(add_a[0], add_a[1]);
+		// Half add_bh = new Programmer().new Half(add_b[0], add_b[1]);
+		// Half add_res = new Programmer().new Half(MEM[132], MEM[133]);
+		// Half res = add_ah.add(add_bh);
+		// System.out.printf("\n" + res.toString() + "\n");
+		// System.out.printf("\n" + add_res.toString() + "\n");
+		// System.out.printf("\n" + String.valueOf(res.equals(add_res)) + "\n");
+		// System.out.printf("\nADD:\t%s:\t %s, %s, \t %x%x, %x%x\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
 	}
 
 	private static void readin(String[] args) {
@@ -243,7 +251,7 @@ public class Programmer {
 			// Scanner sc = new Scanner(new File("immediates.txt"));
 
 			// File f = new File("code.txt");
-			File f = new File("floatadd0.txt");
+			File f = new File("float2int.txt");
 			// BufferedReader b = new BufferedReader(new FileReader(f));
 			ArrayList<Integer> L = new ArrayList<Integer>();
 			ArrayList<String> SL = new ArrayList<String>();
@@ -427,7 +435,7 @@ public class Programmer {
 			if (exp != 0) {
 				man = man | 0x00000400;
 			}
-			bitstring = Integer.toBinaryString((m << 8) | l);
+			bitstring = Integer.toBinaryString(((m << 8) | l) & 0x0000FFFF);
 		}
 		public Half(int i) {
 			System.out.printf("Generating from int\n");
@@ -488,8 +496,8 @@ public class Programmer {
 
 		public byte[] getbytes() {
 			byte[] ret = {0, 0};
-			ret[0] = (byte) Byte.parseByte(bitstring.substring(0,8), 2);
-			ret[1] = (byte) Byte.parseByte(bitstring.substring(7,8), 2);
+			ret[0] = (byte) (0xFF & Integer.parseInt(bitstring.substring(0,8), 2));
+			ret[1] = (byte) (0xFF & Integer.parseInt(bitstring.substring(7,8), 2));
 			return ret;
 		}
 
@@ -521,7 +529,7 @@ public class Programmer {
 			int res;
 			if (this.exp > 28) {
 				System.out.printf("Exp > 28\n");
-				return 0x00017fff | (sign << 15);
+				return (0x00017fff | (sign << 15));
 			}
 			else if (this.exp > 25) {
 				System.out.printf("Exp > 25\n");
@@ -529,7 +537,7 @@ public class Programmer {
 			}
 			else if (this.exp == 25) {
 				System.out.printf("Exp == 25\n");
-				return man | (sign << 15);
+				return (man | (sign << 15));
 			}
 			else if (this.exp > 13) {
 				System.out.printf("Exp > 13\n");
@@ -540,11 +548,11 @@ public class Programmer {
 					System.out.printf("rounding\n");
 					res = res + 0x1;
 				}
-				return res | (sign << 15);
+				return (res | (sign << 15));
 			}
 			else {
 				System.out.printf("Exp < 14\n");
-				return 0x00010000 | (sign << 15);
+				return (0x00010000 | (sign << 15));
 			}
 		}
 	}
