@@ -5,9 +5,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+// import java.lang.util.Random;
 // import static org.joou.Unsigned.*;
 
 public class Programmer {
+	private static final int MINMAX = 32768;
 	private static final int C = 3;
 
 	private static int CMP = 0;
@@ -19,6 +21,16 @@ public class Programmer {
 	private static int PC = 0;
 	private static String[] IM;
 	private static Boolean halt = false;
+
+	// private static byte[] f2i = byte[2];
+	// private static byte[] i2f = byte[2];
+	// private static byte[] add_a = byte[2];
+	// private static byte[] add_b = byte[2];
+
+	private static byte[] f2i;
+	private static byte[] i2f;
+	private static byte[] add_a;
+	private static byte[] add_b;
 
 	public static void main(String[] args) throws IOException {
 		readin(args); // Fills IM
@@ -134,12 +146,13 @@ public class Programmer {
 	}
 
 	private static void lw(int rs, int rt) {
-		reg[rs] =
+		// System.out.printf("%d, %x, %x\n", (reg[rt] & 0xFF), (reg[rt] & 0xFF), MEM[(reg[rt] & 0xFF)]);
+		reg[rs] = MEM[(reg[rt] & 0xFF)];
 		creg[C] = 0;
 	}
 
 	private static void sw(int rs, int rt) {
-
+		MEM[(reg[rs] & 0xFF)] = reg[rt];
 		creg[C] = 0;
 	}
 
@@ -159,16 +172,31 @@ public class Programmer {
 	}
 
 	private static void fillMem() {
-		MEM = new byte[140];
+		MEM = new byte[255];
 
-		MEM[128] = (byte) 0b10111100;
-		MEM[129] = 0b00000000;
-		MEM[130] = (byte) 0b01000000;
-		MEM[131] = 0b00000000;
-		// MEM[128] = 0b00111100;
-		// MEM[129] = 0b00000000;
-		// MEM[130] = 0b00111100;
-		// MEM[131] = 0b00000000;
+		Random rn = new Random();
+		int r0 = rn.nextInt(MINMAX);
+		int r1 = rn.nextInt(MINMAX);
+		int r2 = rn.nextInt(MINMAX);
+		int r3 = rn.nextInt(MINMAX);
+
+		f2i = new Programmer().new Half(r0).getbytes();
+		add_a = new Programmer().new Half(r1).getbytes();
+		add_b = new Programmer().new Half(r2).getbytes();
+		// f2i = {(byte)((r0 & 0xff00) >> 8), (byte)(r0 & 0xFF)};
+		// add_a = {(byte)((r2 & 0xff00) >> 8), (byte)(r2 & 0xFF)};
+		// add_b = {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
+		i2f = new byte[] {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
+
+		MEM[0] = f2i[0];
+		MEM[1] = f2i[1];
+		MEM[64] = i2f[0];
+		MEM[65] = i2f[1];
+		MEM[128] = add_a[0];
+		MEM[129] = add_a[1];
+		MEM[130] = add_b[0];
+		MEM[131] = add_b[1];
+
 		// 0 01111 0000000000 = 1
 		// 0 01111 0000000001 = 1 + 2−10 = 1.0009765625 (next smallest float after 1)
 		// 1 10000 0000000000 = −2
@@ -188,49 +216,25 @@ public class Programmer {
 		// 0 01101 0101010101 = 0.333251953125 ≈ 1/3
 	}
 
-	private static void test() { //0,1 -> 5,6; 64,65 -> 66,67; 130,131 -> 132, 133
-		// int i2f_i = MEM[0] << 8 | MEM[1];
-		// int i2f_f = MEM[5] << 8 | MEM[6];
-		// System.out.printf(Half(i2f_i).equals(Half(MEM[5], MEM[6])));
-		// System.out.printf(Half(i2f_i));
-		// System.out.printf(Half(i2f_i).toInt());
-		// System.out.printf((Half(MEM[5], MEM[6])));
-		// System.out.printf((Half(MEM[5], MEM[6]).toInt()));
-        //
-		// int f2i_f = MEM[64] << 8 | MEM[65];
-		// String f2i_fs = String.format("%16s", Integer.toBinaryString(f2i_f)).replace(" ", "0");
-		// // int f2i_i = MEM[66] << 8 | MEM[67];
-		// System.out.printf(Half(f2i_fs).equals(Half(MEM[66], MEM[67])));
-		// System.out.printf(Half(f2i_fs));
-		// System.out.printf(Half(f2i_fs).toInt);
-		// System.out.printf((Half(MEM[66], MEM[67])));
-		// System.out.printf((Half(MEM[66], MEM[67]).toInt()));
+	private static void test() {
 
-		MEM[128] = (byte) 0b10111100;
-		MEM[129] = 0b00000000;
-		MEM[130] = (byte) 0b01000000;
-		MEM[131] = 0b00000000;
+		Half i2f_h = new Programmer().new Half(i2f[0], i2f[1]);
+		Half i2f_r = new Programmer().new Half(MEM[5], MEM[6]);
+		System.out.printf("\nI2F:\t%s:\t %s, %s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
 
-		int add_a = 0x0000FFFF & (MEM[128] << 8 | MEM[129]);
-		int add_b = 0x0000FFFF & (MEM[130] << 8 | MEM[131]);
-		int add_r = MEM[132] << 8 | MEM[133];
-		String add_as = String.format("%16s", Integer.toBinaryString(add_a)).replace(" ", "0");
-		String add_bs = String.format("%16s", Integer.toBinaryString(add_b)).replace(" ", "0");
-		String add_rs = String.format("%16s", Integer.toBinaryString(add_r)).replace(" ", "0");
-		System.out.printf(add_as + ", " + add_bs+ ", " + add_rs + "\n");
-		Half add_ah = new Programmer().new Half(add_as);
-		Half add_bh = new Programmer().new Half(add_bs);
-		Half add_res2 = new Programmer().new Half(MEM[132], MEM[133]);
-		Half add_res = new Programmer().new Half(add_rs);
+		Half f2i_h = new Programmer().new Half(f2i[0], f2i[1]);
+		int actual = f2i_h.toInt();
+		int f2i_r = MEM[64] << 8 | MEM[65];
+		System.out.printf("\nF2I:\t%s:\t %x, %x \t %x%x\n", String.valueOf(actual == f2i_r), actual, f2i_r, f2i[0], f2i[1]);
+
+		Half add_ah = new Programmer().new Half(add_a[0], add_a[1]);
+		Half add_bh = new Programmer().new Half(add_b[0], add_b[1]);
+		Half add_res = new Programmer().new Half(MEM[132], MEM[133]);
 		Half res = add_ah.add(add_bh);
 		System.out.printf("\n" + res.toString() + "\n");
 		System.out.printf("\n" + add_res.toString() + "\n");
 		System.out.printf("\n" + String.valueOf(res.equals(add_res)) + "\n");
-		// System.out.printf((Programmer.Half(add_as).add(Programmer.Half(add_bs))).equals(Programmer.Half(MEM[132], MEM[133])));
-		// System.out.printf((Programmer.Half(add_as).add(Programmer.Half(add_bs))));
-		// System.out.printf((Programmer.Half(add_as).add(Programmer.Half(add_bs))).toInt());
-		// System.out.printf((Programmer.Half(MEM[132], MEM[133])));
-		// System.out.printf((Programmer.Half(MEM[132], MEM[133]).toInt()));
+		System.out.printf("\nADD:\t%s:\t %s, %s, \t %x%x, %x%x\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
 	}
 
 	private static void readin(String[] args) {
@@ -248,7 +252,7 @@ public class Programmer {
 
 			reg = new byte[]{0,0,0,0};
 			creg = new byte[]{0,1,7,0};
-			MEM = new byte[140];
+			fillMem();
 
             // Write Immediate LUT
 			while (sc.hasNextLine()) {
@@ -272,7 +276,34 @@ public class Programmer {
 
 			sc = new Scanner(f);
 			while (sc.hasNextLine()) {
-			  SL.add(sc.nextLine());
+				readLine = sc.nextLine();
+				switch (readLine.split(" ")[0].toLowerCase()) {
+					case "imme":
+					case "blt":
+					case "bne":
+					case "add":
+					case "addc":
+					case "sub":
+					case "subc":
+					case "lsl":
+					case "lslc":
+					case "lsr":
+					case "lsrc":
+					case "asr":
+					case "cmp":
+					case "and":
+					case "or":
+					case "neg":
+					case "lw":
+					case "sw":
+					case "alw":
+					case "asw":
+					case "halt":
+						SL.add(readLine);
+						break;
+					default:
+						break;
+				}
 			}
 			IM = SL.toArray(new String[SL.size()]);
 		} catch (IOException e) {
@@ -283,12 +314,13 @@ public class Programmer {
 
 	private static void run(){
 		while (PC < IM.length && !halt) {
-			parseline(IM[PC].split(" "));
+			parseline(IM[PC]);
 			PC++;
 		}
 	}
 
-	private static void parseline(String[] line) {
+	private static void parseline(String l) {
+		String[] line = l.split(" ");
 		switch (line[0].toLowerCase()) {
 			case "imme":
 				imme(register(line[1]), immediate(line[2]));
@@ -356,7 +388,7 @@ public class Programmer {
 			default:
 				break;
 		}
-		System.out.printf("R0: %d\tR1: %d\tR2: %d\tR4: %d\tCout: %d\tCMP: %d\t\tCommand: %s\n", reg[0], reg[1], reg[2], reg[3], creg[C], CMP, line[0]);
+		System.out.printf("R0: %2x\tR1: %2x\tR2: %2x\tR3: %2x\tCout: %d\tCMP: %d\t\tCommand: %s\n", reg[0], reg[1], reg[2], reg[3], creg[C], CMP, l);
 
 	}
 
@@ -456,8 +488,8 @@ public class Programmer {
 
 		public byte[] getbytes() {
 			byte[] ret = {0, 0};
-			ret[0] = (byte) Byte.valueOf(bitstring.substring(0,8));
-			ret[1] = (byte) Byte.valueOf(bitstring.substring(8,8));
+			ret[0] = (byte) Byte.parseByte(bitstring.substring(0,8), 2);
+			ret[1] = (byte) Byte.parseByte(bitstring.substring(7,8), 2);
 			return ret;
 		}
 
