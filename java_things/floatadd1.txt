@@ -4,7 +4,7 @@
 %Mem location used: 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 28, 29, 30, 31
 
 %store in memory
-imme $1 ,10
+imme $1, 10
 lw $1, $1
 imme $2, 28
 sw $1, $2
@@ -21,7 +21,7 @@ lw $1, $1
 imme $2, 31
 sw $1, $2
 imme $3, 10
-imme $0, 11
+imme $0, 12
 lw $1, $3
 lw $2, $0
 
@@ -41,12 +41,12 @@ blt 0 %2smaller %this is (+27). Maps to loc 0
 imme $0, 28
 lw $3, $0
 asw $3
-imme $0,30
+imme $0, 30
 lw $3, $0
 imme $0, 28
 sw $3, $0
 alw $3
-imme $0,30
+imme $0, 30
 sw $3, $0
 
 imme $0, 29
@@ -85,7 +85,7 @@ imme $0, 16
 sw $2, $0
 
 %mask fractions and append 1
-imme $3,30
+imme $3, 30
 lw $3, $3
 imme $2, 6
 lsl $3, $2
@@ -105,7 +105,7 @@ alw $3
 imme $2, 8
 sub $2, $0
 imme $0, 0
-cmp $0, $2
+cmp $2, $0
 blt 1 $rshift = (+8), maps to 1
 
 lsl $3, $2
@@ -130,6 +130,7 @@ lw $1, $0
 imme $0, 16
 lw $2, $0
 or $2, $1 %completed 21 of 13
+asw $2
 
 %prepend 1 to A significand
 imme $0, 28
@@ -145,32 +146,39 @@ sw $3, $0
 %sum significands
 imme $0, 29
 lw $1, $0
+alw $2
 add $1, $2
-imme $0, 20
+imme $3, 0
+addc $3, $3
+asw $3
+imme $0, 21
 sw $1, $0
 imme $0, 17
 lw $2, $0
 imme $0, 18
 lw $3, $0
-addc $2, $3
-imme $0, 21
+alw $0
+add $2, $0
+add $2, $3
+imme $0, 20
 sw $2, $0
 
 %if sum overflow, right shift by 1 and increment exponent by 1
 imme $0, 4
-lsl $1, $0
+lsl $2, $0
 imme $0, 7
-lsr $1, $0
+lsr $2, $0
 imme $0, 1
-cmp $1, $0
-bne 3 %notoverflow (+17)
+cmp $2, $0
+bne 3 %notoverflow (+18)
 imme $0, 20
 lw $1, $0
 imme $0, 21
 lw $2, $0
 imme $0, 1
 lsr $1, $0
-lsrc $2, $0
+lsrc $2, $3
+lsr $2, $0
 imme $0, 20
 sw $1, $0
 imme $0, 21
@@ -197,7 +205,7 @@ lsl $2, $0
 or $1, $2
 
 %strip leading 1 off sum significand
-imme $0, 7 %0x00000011
+imme $0, 3 %0x00000011
 imme $3, 20
 lw $2, $3
 and $2, $0
