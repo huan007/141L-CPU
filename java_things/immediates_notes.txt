@@ -7,7 +7,7 @@
 6 INT2FLT LSHEND (fixed)
 7 (fixed)
 8 (fixed)
-127 7F
+9 #9
 128 A1(add),
 129 A2(add),
 130 B1(add),
@@ -22,11 +22,11 @@
 133 LOWER
 64 f2i MSHLoc fadd A1copy
 65 f2i LSHloc fadd A2copy
--1
+216 Huan
 25 SignLoc
 67 f2i LSHend fadd B1copy
 66 f2i MSHend fadd B2copy
--1
+127 7F
 29 (fixed)
 255 FF
 31 1F (fixed)
