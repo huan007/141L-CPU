@@ -3,9 +3,9 @@
 7 rshiftend
 17 notoverflow
 -3 code.txt
-13 pos //F2i
 3 NOTEQ, EQ
 11 NoOverflow
+13 pos //F2i
 28 NEG
 -4 loop1
 51 UNDEFLOW

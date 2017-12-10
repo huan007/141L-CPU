@@ -1,18 +1,18 @@
-0 int2fltMSH
-1 int2fltLSH
-2
-3
-4
-5 INT2FLT MSHEND
-6 INT2FLT LSHEND
-7
-8
-9
+0 int2fltMSH (fixed)
+1 int2fltLSH (fixed)
+2 (fixed)
+3 (fixed)
+4 (fixed)
+5 INT2FLT MSHEND (fixed)
+6 INT2FLT LSHEND (fixed)
+7 (fixed)
+8 (fixed)
+9 #9
 128 A1(add),
 129 A2(add),
 130 B1(add),
 131 B2(add),
-14 LARGEEXP, sloc
+14 LARGEEXP, sloc (fixed)
 15 DIFFEXP (variable)
 16 LOWERSIG, (variable)
 17 UPPERSIG, (variable)
@@ -27,6 +27,6 @@
 67 f2i LSHend fadd B1copy
 66 f2i MSHend fadd B2copy
 127 7F
-29
+29 (fixed)
 255 FF
-31 1F
+31 1F (fixed)
