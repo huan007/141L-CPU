@@ -1,24 +1,24 @@
 
 
 %Registers used: $1, $2, $3, $0
-%Mem location used: 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 32, 33, 34, 35
+%Mem location used: 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 28, 29, 30, 31
 
 %store in memory
 imme $1 ,10
 lw $1, $1
-imme $2, 32
+imme $2, 28
 sw $1, $2
 imme $1 ,11
 lw $1, $1
-imme $2, 33
+imme $2, 29
 sw $1, $2
-imme $1 ,32
+imme $1 ,12
 lw $1, $1
-imme $2, 34
+imme $2, 30
 sw $1, $2
-imme $1 ,33
+imme $1 ,13
 lw $1, $1
-imme $2, 35
+imme $2, 31
 sw $1, $2
 imme $3, 10
 imme $0, 11
@@ -38,26 +38,26 @@ cmp $2, $1
 blt 0 %2smaller %this is (+27). Maps to loc 0
 
 %swap A and B
-imme $0, 32
+imme $0, 28
 lw $3, $0
 asw $3
-imme $0, 34
+imme $0,30
 lw $3, $0
-imme $0, 32
+imme $0, 28
 sw $3, $0
 alw $3
-imme $0, 34
+imme $0,30
 sw $3, $0
 
-imme $0, 33
+imme $0, 29
 lw $3, $0
 asw $3
-imme $0, 35
+imme $0, 31
 lw $3, $0
-imme $0, 33
+imme $0, 29
 sw $3, $0
 alw $3
-imme $0, 35
+imme $0, 31
 sw $3, $0
 
 imme $3, 0
@@ -76,7 +76,7 @@ imme $3, 15
 sw $1, $3
 
 %lsr significand of smaller number by difference between exponents
-imme $2, 35
+imme $2, 31
 lw $2, $2
 imme $0, 15
 lw $0, $0
@@ -85,7 +85,7 @@ imme $0, 16
 sw $2, $0
 
 %mask fractions and append 1
-imme $3, 34
+imme $3,30
 lw $3, $3
 imme $2, 6
 lsl $3, $2
@@ -132,7 +132,7 @@ lw $2, $0
 or $2, $1 %completed 21 of 13
 
 %prepend 1 to A significand
-imme $0, 32
+imme $0, 28
 lw $3, $0
 imme $2, 6
 lsl $3, $2
@@ -143,7 +143,7 @@ imme $0, 18
 sw $3, $0
 
 %sum significands
-imme $0, 33
+imme $0, 29
 lw $1, $0
 add $1, $2
 imme $0, 20
@@ -184,7 +184,7 @@ notoverflow:
 
 %merge sum significand and exponent and set sign bit
 %set sign bit
-imme $0, 32
+imme $0, 28
 lw $1, $0
 imme $0, 1
 imme $3, 7
