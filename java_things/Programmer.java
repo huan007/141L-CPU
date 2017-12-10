@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class Programmer {
-	private static final int MINMAX = 65400;
+	private static final int MINMAX = 32767;
 	// private static final int MINMAX = 65535;
 	private static final int C = 3;
 
@@ -59,33 +59,33 @@ public class Programmer {
 
 	private static void add(int rs, int rt) {
 		int val = reg[rs] + reg[rt];
-		creg[C] = (byte)(val & 0x0100);
+		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 	}
 
 	private static void addc(int rs, int rt) {
 		int val = reg[rs] + creg[rt];
-		creg[C] = (byte)(val & 0x0100);
+		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 	}
 
 	private static void sub(int rs, int rt) {
 		int val = reg[rs] - reg[rt];
-		creg[C] = (byte)(val & 0x0100);
+		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 
 	}
 
 	private static void subc(int rs, int rt) {
 		int val = reg[rs] - creg[rt];
-		creg[C] = (byte)(val & 0x0100);
+		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 
 	}
 
 	private static void lsl(int rs, int rt) {
 		int val = reg[rs] << reg[rt];
-		creg[C] = (byte)(val & 0x0100);
+		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 
 	}
@@ -96,9 +96,9 @@ public class Programmer {
 			val = (reg[rs] << 1) | creg[C];
 		}
 		else {
-			val = (reg[rs] << reg[rt]);
+			val = (reg[rs] << creg[rt]);
 		}
-		creg[C] = (byte)(val & 0x0100);
+		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 
 	}
@@ -112,12 +112,12 @@ public class Programmer {
 	private static void lsrc(int rs, int rt) {
 		int val = 0;
 		if (rt == C) {
-			val = (((reg[rs] & 0x00ff) >>> 1) | (creg[C] << 7) & 0x00ff)>>>7;
+			val = (((reg[rs] & 0xff) >>> 1) | ((creg[C] << 7) & 0x00ff));
 			creg[C] = (byte)(reg[rs] & 0x01);
 		}
 		else {
-			val = (reg[rs] & 0x00ff) >>> (reg[rt]  & 0x00ff);
-			creg[C] = (byte)((reg[rs] & (0x01 << (reg[rt] - 1))) >>> (reg[rt] - 1));
+			val = (reg[rs] & 0x00ff) >>> (creg[rt]  & 0x00ff);
+			creg[C] = (byte)((reg[rs] & (1 << (creg[rt] - 1))) >>> (creg[rt] - 1));
 		}
 		reg[rs] = (byte)(val & 0x00FF);
 	}
@@ -181,8 +181,7 @@ public class Programmer {
 		MEM = new byte[256];
 
 		Random rn = new Random();
-		// int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
-		int r0 = 0x0000A133;
+		int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 		int r1 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 		int r2 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 		int r3 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
@@ -190,9 +189,6 @@ public class Programmer {
 		f2i = new Programmer().new Half(r0).getbytes();
 		add_a = new Programmer().new Half(r1).getbytes();
 		add_b = new Programmer().new Half(r2).getbytes();
-		// f2i = {(byte)((r0 & 0xff00) >> 8), (byte)(r0 & 0xFF)};
-		// add_a = {(byte)((r2 & 0xff00) >> 8), (byte)(r2 & 0xFF)};
-		// add_b = {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
 		i2f = new byte[] {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
 
 		MEM[0] = i2f[0];
@@ -209,9 +205,9 @@ public class Programmer {
 
 	private static void test() {
 
-		// Half i2f_h = new Programmer().new Half(i2f[0], i2f[1]);
-		// Half i2f_r = new Programmer().new Half(MEM[5], MEM[6]);
-		// System.out.printf("\nI2F:\t%s:\t %s, %s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
+		Half i2f_h = new Programmer().new Half(i2f[0], i2f[1]);
+		Half i2f_r = new Programmer().new Half(MEM[5], MEM[6]);
+		System.out.printf("\nI2F:\t%s:\t %s, %s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
 
 		Half f2i_h = new Programmer().new Half(f2i[0], f2i[1]);
 		int actual = 0x0001ffff & f2i_h.toInt();
@@ -220,15 +216,21 @@ public class Programmer {
 			f2i_r |= 0x00010000;
 		}
 		System.out.printf("\nF2I:\t%s:\t %x, %x \t %x%x \t %x%x\n", String.valueOf(actual == f2i_r), actual, f2i_r, MEM[66], MEM[67], f2i[0], f2i[1]);
-        //
-		// Half add_ah = new Programmer().new Half(add_a[0], add_a[1]);
-		// Half add_bh = new Programmer().new Half(add_b[0], add_b[1]);
-		// Half add_res = new Programmer().new Half(MEM[132], MEM[133]);
-		// Half res = add_ah.add(add_bh);
-		// System.out.printf("\n" + res.toString() + "\n");
-		// System.out.printf("\n" + add_res.toString() + "\n");
-		// System.out.printf("\n" + String.valueOf(res.equals(add_res)) + "\n");
-		// System.out.printf("\nADD:\t%s:\t %s, %s, \t %x%x, %x%x\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
+
+		Half add_ah = new Programmer().new Half(add_a[0], add_a[1]);
+		Half add_bh = new Programmer().new Half(add_b[0], add_b[1]);
+		Half add_res = new Programmer().new Half(MEM[132], MEM[133]);
+		Half res = add_ah.add(add_bh);
+		System.out.printf("\n" + res.toString() + "\n");
+		System.out.printf("\n" + add_res.toString() + "\n");
+		System.out.printf("\n" + String.valueOf(res.equals(add_res)) + "\n");
+		System.out.printf("\nADD:\t%s:\t %s, %s, \t %x%x, %x%x\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
+
+		System.out.printf("\n\n\n----------------------OVERALL----------------------\n\n\n");
+		System.out.printf("\nI2F:\t%s:\t %s, %s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
+		System.out.printf("\nF2I:\t%s:\t %x, %x \t %x%x \t %x%x\n", String.valueOf(actual == f2i_r), actual, f2i_r, MEM[66], MEM[67], f2i[0], f2i[1]);
+		System.out.printf("\nADD:\t%s:\t %s, %s, \t %x%x, %x%x\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
+
 	}
 
 	private static void readin(String[] args) {
@@ -417,49 +419,55 @@ public class Programmer {
 			System.out.printf("Generating from byte pair\n");
 			sign = (m & 0x80) >> 7;
 			exp = (m & 0x7c) >> 2;
-			man = ((m & 0x03) << 3) | l;
+			man = 0x3FFF & (((m & 0x03) << 8) | (l & 0xff));
 			if (exp != 0) {
 				man = man | 0x00000400;
 			}
-			bitstring = Integer.toBinaryString(((m << 8) | l) & 0x0000FFFF);
+			bitstring = Integer.toBinaryString(((m << 8) | (l & 0xff)) & 0x0000FFFF);
+			System.out.printf("%x%x S:%d Exp: %d, %x, Man: %x, BITS: %s\n", m,l, this.sign, this.exp, this.exp, this.man, this.bitstring);
 		}
 		public Half(int i) {
-			System.out.printf("Generating from int\n");
+			System.out.printf("Generating from int %x\n", i & 0x0000FFFF);
 			this.sign = (0x00008000 & i) >> 15;
 			int exp = 29;
 			int bot014 = (0x00007FFF & i);
-			while ((bot014 & 0x00008000) == 0 && exp >= 0) {
-				System.out.printf("Shifting " + Integer.toBinaryString(bot014) + "\n");
+			while ((bot014 & 0x00004000) == 0 && exp >= 0) {
 				exp--;
 				bot014 = bot014 << 1;
 			}
-			if ((bot014 & 0x00000010) != 0){ // Ir R=1
+			if ((bot014 & 0x00000008) != 0){ // Ir R=1
+				System.out.println("R");
 				// if U or S
-				if ((bot014 & 0x00000020) != 0 || (bot014 & 0x0000000F) != 0) {
+				if ((bot014 & 0x000000010) != 0 || (bot014 & 0x00000007) != 0) {
+					System.out.println("U or S");
 					bot014 += 8;
 				}
 			}
-			if ((bot014 & 0x00010000) != 0) {
+			if ((bot014 & 0x00008000) != 0) {
 				bot014 = bot014 >> 1;
 				exp++;
 			}
-			man = ((bot014) >> 5);
+			man = ((bot014) >> 4);
 			this.man = man;
 			this.exp = exp;
 			String bits = "";
 			bits = Integer.toBinaryString(this.sign);
 			System.out.printf("BITS sign: %s\n", bits);
-			bits = bits + Integer.toBinaryString(exp);
-			System.out.printf("BITS signexp: %s, %d\n", bits, exp);
-			String manbits = Integer.toBinaryString(man);
-			System.out.printf("MANBITS: %s, MAN %x\n", manbits, man);
-			if (manbits.length() == 11) {
-				manbits = manbits.substring(1,11);
-				System.out.printf("Cutting manbits" + manbits + "\n");
+			String expbits = Integer.toBinaryString(exp);
+			while (expbits.length() < 5) {
+				expbits = "0" + expbits;
 			}
+			bits = bits + expbits;
+			System.out.printf("BITS signexp: %s, %d\n", bits, exp);
+			String manbits = Integer.toBinaryString(man & 0x000003ff);
+			System.out.printf("MANBITS: %s, MAN %x\n", manbits, man);
+			// if (manbits.length() == 11) {
+			// 	manbits = manbits.substring(0,10);
+			// 	// System.out.printf("Cutting manbits" + manbits + "\n");
+			// }
 			while (manbits.length() < 10) {
 				manbits = "0" + manbits;
-				System.out.printf("Filling manbits" + manbits + "\n");
+				// System.out.printf("Filling manbits" + manbits + "\n");
 			}
 			bits += manbits;
 			System.out.printf("BITS Final: %s\n", bits);
@@ -481,8 +489,8 @@ public class Programmer {
 		}
 
 		public boolean equals(Half other) {
-			System.out.printf("Stating equality" + "\n");
-			System.out.printf("Sign: %d, %d \t Exp: %d, %d, Man:%x, %x \n", this.sign, other.sign, this.exp, other.exp, this.man, other.man);
+			// System.out.printf("Stating equality" + "\n");
+			// System.out.printf("Sign: %d, %d \t Exp: %d, %d, Man:%x, %x \n", this.sign, other.sign, this.exp, other.exp, this.man, other.man);
 			return this.sign == other.sign && this.exp == other.exp && this.man == other.man;
 		}
 
@@ -517,15 +525,16 @@ public class Programmer {
 
 		public int toInt() {
 			System.out.printf("Turning half to int, " + this.bitstring + "\n");
-			man = (int) this.man;
+			man = (int) this.man & 0x000007FF;
 			int res;
-			if (this.exp > 28) {
+			System.out.printf("Sign: %d, Exp: %d, Man: %x, %x\n", sign, exp, man, this.man);
+			if (this.exp > 29) {
 				System.out.printf("Exp > 28\n");
 				return (0x00017fff | (sign << 15));
 			}
 			else if (this.exp > 25) {
 				System.out.printf("Exp > 25\n");
-				return (man << (this.exp - 25)) | (sign << 15);
+				return ((0x00007fff) & (man << (this.exp - 25))) | ((sign << 15) & 0x00008000);
 			}
 			else if (this.exp == 25) {
 				System.out.printf("Exp == 25\n");

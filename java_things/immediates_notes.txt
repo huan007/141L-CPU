@@ -27,6 +27,6 @@
 67 f2i LSHend fadd B1copy
 66 f2i MSHend fadd B2copy
 127 7F
-29 (fixed)
+30 (fixed) (wrong place but fuck it)
 255 FF
 31 1F (fixed)

@@ -1,24 +1,9 @@
 addc $r0 $r0
-addc $r0 $r1
-addc $r1 $r2
-imme $r0 10
-lw $r0 $r0
-imme $r1 11
-lw $1 $r1
-imme $r2 1
-imme $r2 21
-sw $r2 $r2
-imme $r3 $20 %UPPER to $r3
-asw $r2
-imme $r2 6
-alw $r2
-sw $r1 $r3
-lw $r2 $r3
-imme $r0 0
-imme $r1 1
-imme $r2 8
-imme $r3 0
-add $r0 $r1
-sub $r2 $r1
-cmp $r2 $r3
-bne 4
+addc $r1 $r1
+addc $r2 $r2
+imme $r0 30
+add $r0 $r0
+addc $r0 $r3
+lsr $r0, $r1
+lsr $r0, $r1
+lsrc $r0, $r3

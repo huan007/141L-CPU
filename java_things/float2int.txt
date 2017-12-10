@@ -22,12 +22,12 @@ NOTEQ
 imme $r2 4
 add $r0 $r2
 EQ
-imme $r2 28
-cmp $r2 $r1
+imme $r2 29 // Actually 30
+cmp $r1 $r2
 blt 6 NoOVERFLOW (+11)
 Overflow
-imme $r0 FF
-imme $r1 7F
+imme $r0 30 //FF
+imme $r1 28 //7f
 imme $r2 25 //Signloc
 lw $r2 $r2
 or $r1 $r2
@@ -41,7 +41,7 @@ imme $r2 25
 cmp $r2 $r1
 blt 7 POS (+10)
 cmp $r1 $r2
-blt 8 NEG
+blt 8 NEGA
 EQUAL
 imme $r2 25 //Signloc
 lw $r2 $r2
@@ -72,7 +72,7 @@ sw $r0 $r1
 imme $r1 26 //LSHend
 sw $r2 $r1
 Halt 0
-NEG //Right shift & round
+NEGA //Right shift & round
 lslc $r3 $r1
 cmp $r1 $r3
 blt 10 UNDERFLOW
@@ -89,12 +89,12 @@ imme $r3 27 //MSHend
 sw $r0 $r3
 imme $r0 14 //Sloc
 lw $r0 $r0
-als $r3
+alw $r3
 add $r0 $r3
 imme $r3 14 //Sloc
 sw $r0 $r3
 imme $r0 27 //MSHend
-ls $r0 $r0
+lw $r0 $r0
 imme $r3 0
 subc $r2 $r1
 cmp $r2 $r3
