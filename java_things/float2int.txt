@@ -1,12 +1,12 @@
-imme $r0 MSHLoc
+imme $r0 22 //MSHLoc
 lw $r0 $r0
 imme $r2 1
 imme $r3 7
 lsl $r2 $r3
 and $r2 $r0
-imme $r1 SignLoc
+imme $r1 25 //Signloc
 sw $r2 $r1
-imme $r1 0x1F
+imme $r1 31
 imme $r2 2
 lsl $r1 $r2
 and $r1 $r0
@@ -15,47 +15,47 @@ addc $r2 $r1
 and $r0 $r2
 imme $r2 0
 cmp $r1 $r2
-bne NOTEQ
+bne 5 NOTEQ
 cmp $r3 $r2
-bne EQ
+bne 5 EQ
 NOTEQ
 imme $r2 4
 add $r0 $r2
 EQ
 imme $r2 28
 cmp $r2 $r1
-blt NoOVERFLOW (+11)
+blt 6 NoOVERFLOW (+11)
 Overflow
 imme $r0 FF
 imme $r1 7F
-imme $r2 SignLoc
+imme $r2 25 //Signloc
 lw $r2 $r2
 or $r1 $r2
-imme $r2 MSHend
-imme $r3 LSHend
+imme $r2 27 //MSHend
+imme $r3 26 //LSHend
 sw $r0 $r3
 sw $r1 $r2
 HALT 1 //Halt with error
 NO Overflow
 imme $r2 25
 cmp $r2 $r1
-blt POS (+10)
+blt 7 POS (+10)
 cmp $r1 $r2
-blt NEG
+blt 8 NEG
 EQUAL
-imme $r2 Signloc
+imme $r2 25 //Signloc
 lw $r2 $r2
 or $r0 $r2
-imme $r1 MSHend
+imme $r1 27 //MSHend
 sw $r0 $r1
-imme $r0 LSHloc
-imme $r1 LSHend
+imme $r0 23 //LSHloc
+imme $r1 26 //LSHend
 lw $r0 $r0
 sw $r0 $r1
 HALT 0
 POS //Left shift mantissa
 sub $r1 $r2
-imme $r2 LSHloc
+imme $r2 23 //LSHloc
 lw $r2 $r2
 imme $r3 0
 loop1:
@@ -63,21 +63,21 @@ lslc $r2 $r1
 lslc $r0 $r3
 subc $r1 $r1
 cmp $r1 $r3
-bne loop1 (-4)
-imme $r1 Signloc
+bne 9 loop1 (-4)
+imme $r1 25 //Signloc
 lw $r1 $r1
 or $r0 $r1
-imme $r1 MSHEnd
+imme $r1 27 //MSHend
 sw $r0 $r1
-imme $r1 LSHEnd
+imme $r1 26 //LSHend
 sw $r2 $r1
 Halt 0
 NEG //Right shift & round
 lslc $r3 $r1
 cmp $r1 $r3
-blt UNDERFLOW
+blt 10 UNDERFLOW
 sub $r2 $r1
-imme $r1 LSHloc
+imme $r1 23 //LSHloc
 lw $r1 $r1
 imme $r3 0
 loop2:
@@ -85,53 +85,53 @@ lsrc $r0 $r1
 lsrc $r1 $r3
 addc $r3 $r3
 asw $r3
-imme $r3 MSHEnd
+imme $r3 27 //MSHend
 sw $r0 $r3
-imme $r0 Sloc
+imme $r0 14 //Sloc
 lw $r0 $r0
 als $r3
 add $r0 $r3
-imme $r3 Sloc
+imme $r3 14 //Sloc
 sw $r0 $r3
-imme $r0 MSHEnd
+imme $r0 27 //MSHend
 ls $r0 $r0
 imme $r3 0
 subc $r2 $r1
 cmp $r2 $r3
-bne loop2 (-7)
-imme $r3 Sloc
+bne 11 loop2 (-7)
+imme $r3 14 //Sloc
 lw $r3 $r3
 alw $r2
 sub $r3 $r2
 asw $r3
 imme $r3 1
 cmp $r3 $r2
-bne NOROUND (+13)
+bne 12 NOROUND (+13)
 and $r3 $r1
 imme $r2 1
 cmp $r3 $r2
-bne ROUND (+7)
+bne 13 ROUND (+7)
 alw $r3
 cmp $r3 $r2
-bne ROUND (+4)
+bne 14 ROUND (+4)
 imme $r3 1
 cmp $r3 $r3
-bne NOROUND //always
+bne 15 NOROUND //always
 ROUND
 addc $r1 $r1
 addc $r0 $r3
 NOROUND
-imme $r2 SignLoc
+imme $r2 25 //Signloc
 lw $r2 $r2
 or $r0 $r2
-imme $r2 MSHend
-imme $r3 LSHend
+imme $r2 27 //MSHend
+imme $r3 26 //LSHend
 sw $r0 $r2
 sw $r1 $r3
 HALT 0
 UNDERFLOW
-imme $r0 Signloc
+imme $r0 25 //Signloc
 lw $r0 $r0
-imme $r1 MSHend
+imme $r1 27 //MSHend
 sw $r0 $r1
 halt 1

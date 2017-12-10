@@ -181,7 +181,8 @@ public class Programmer {
 		MEM = new byte[256];
 
 		Random rn = new Random();
-		int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
+		// int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
+		int r0 = 0x0000A133;
 		int r1 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 		int r2 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 		int r3 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
@@ -254,7 +255,12 @@ public class Programmer {
 			// Scanner sc = new Scanner(new File("immediates.txt"));
 
 			// File f = new File("code.txt");
-			File f = new File("float2int.txt");
+			String filename = "float2int.txt"
+            // Generate IM
+			if (args.length > 0){
+				f = args[0];
+			}
+			File f = new File(filename);
 			// BufferedReader b = new BufferedReader(new FileReader(f));
 			ArrayList<Integer> L = new ArrayList<Integer>();
 			ArrayList<String> SL = new ArrayList<String>();
@@ -279,11 +285,6 @@ public class Programmer {
 			  L.add(Integer.valueOf((sc.nextLine().split(" ")[0])));
 			}
 			branches = L.toArray(new Integer[L.size()]);
-
-            // Generate IM
-			if (args.length == 2){
-				f = new File(args[0]);
-			}
 
 			sc = new Scanner(f);
 			while (sc.hasNextLine()) {
@@ -450,16 +451,17 @@ public class Programmer {
 				exp--;
 				bot014 = bot014 << 1;
 			}
-			if ((bot014 & 0x00000008) != 0){
-				if ((bot014 & 0x00000010) != 0 || (bot014 & 0x00000007) != 0) {
+			if ((bot014 & 0x00000010) != 0){ // Ir R=1
+				// if U or S
+				if ((bot014 & 0x00000020) != 0 || (bot014 & 0x0000000F) != 0) {
 					bot014 += 8;
 				}
 			}
-			if ((bot014 & 0x00008000) != 0) {
+			if ((bot014 & 0x00010000) != 0) {
 				bot014 = bot014 >> 1;
 				exp++;
 			}
-			man = (bot014 >> 4);
+			man = ((bot014) >> 5);
 			this.man = man;
 			this.exp = exp;
 			String bits = "";
