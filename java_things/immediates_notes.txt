@@ -20,12 +20,12 @@
 19 UPPERSIGMASK, (variable)
 132 UPPER,
 133 LOWER
-64 f2i MSHLoc
-65 f2i LSHloc
+64 f2i MSHLoc fadd A1copy
+65 f2i LSHloc fadd A2copy
 -1
-25 SignLoc (fixed)
-67 f2i LSHend
-66 f2i MSHend
+25 SignLoc
+67 f2i LSHend fadd B1copy
+66 f2i MSHend fadd B2copy
 -1
 29 (fixed)
 255 FF
