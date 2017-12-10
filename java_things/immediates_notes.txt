@@ -7,12 +7,12 @@
 6 INT2FLT LSHEND
 7
 8
--1
-128 A1,
-129 A2,
-130 B1,
-131 B2,
-14 LARGEEXP, sloc (vairable)
+127 7F
+128 A1(add),
+129 A2(add),
+130 B1(add),
+131 B2(add),
+14 LARGEEXP, sloc
 15 DIFFEXP (variable)
 16 LOWERSIG, (variable)
 17 UPPERSIG, (variable)
@@ -24,9 +24,9 @@
 65 f2i LSHloc
 -1
 25 SignLoc
-127 7F
-255 FF
-28
 67 f2i LSHend
 66 f2i MSHend
+-1
+29
+255 FF
 31 1F
