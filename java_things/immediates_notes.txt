@@ -16,8 +16,8 @@
 15 DIFFEXP (variable)
 16 LOWERSIG, (variable)
 17 UPPERSIG, (variable)
-18 UPPERSIGA (variable)
-19 UPPERSIGMASK, (variable)
+23 UPPERSIGA #23
+255 UPPERSIGMASK, 255 FF
 132 UPPER,
 133 LOWER
 64 f2i MSHLoc fadd A1copy
@@ -27,6 +27,6 @@
 67 f2i LSHend fadd B1copy
 66 f2i MSHend fadd B2copy
 127 7F
-30 (fixed) (wrong place but fuck it)
-255 FF
+29
+30 (fixed)
 31 1F (fixed)

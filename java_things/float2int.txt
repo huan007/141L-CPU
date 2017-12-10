@@ -22,11 +22,11 @@ NOTEQ
 imme $r2 4
 add $r0 $r2
 EQ
-imme $r2 29 // Actually 30
+imme $r2 30 // Actually 30
 cmp $r1 $r2
 blt 6 NoOVERFLOW (+11)
 Overflow
-imme $r0 30 //FF
+imme $r0 19 //FF
 imme $r1 28 //7f
 imme $r2 25 //Signloc
 lw $r2 $r2

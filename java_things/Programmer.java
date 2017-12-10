@@ -185,11 +185,13 @@ public class Programmer {
 		int r1 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 		int r2 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 		int r3 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
+		// int r3 = 0x00008e54;
 
 		f2i = new Programmer().new Half(r0).getbytes();
 		add_a = new Programmer().new Half(r1).getbytes();
 		add_b = new Programmer().new Half(r2).getbytes();
 		i2f = new byte[] {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
+
 
 		MEM[0] = i2f[0];
 		MEM[1] = i2f[1];
@@ -208,7 +210,7 @@ public class Programmer {
 		int f2i_int = 0x0000ffff & (0x0000ff00 & (MEM[0] << 8) | 0x000000ff &  MEM[1]);
 		Half i2f_h = new Programmer().new Half(f2i_int);
 		Half i2f_r = new Programmer().new Half(MEM[5], MEM[6]);
-		System.out.printf("\nI2F:\t%s:\t %s, %s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
+		System.out.printf("\nI2F:\t%s:\t %16s, %16s \t %x%x\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
 
 		Half f2i_h = new Programmer().new Half(f2i[0], f2i[1]);
 		int actual = 0x0001ffff & f2i_h.toInt();
@@ -228,7 +230,7 @@ public class Programmer {
 		System.out.printf("\nADD:\t%s:\t %s, %s, \t %x%x, %x%x\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
 
 		System.out.printf("\n\n\n----------------------OVERALL----------------------\n\n\n");
-		System.out.printf("I2F:\t%s\t Test: %s, \tAssembly: %s \t (INT: %x%x)\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), i2f[0], i2f[1]);
+		System.out.printf("I2F:\t%s\t Test: %s, \tAssembly: %16s \t (INT: %x)\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), (i2f[0] << 8 | (i2f[1] & 0xFF)) & 0xFFFF);
 		System.out.printf("F2I:\t%s\t Test: %x, \t\t\tAssembly: %x \t (Float: %x%x)\n", String.valueOf(actual == f2i_r), actual, f2i_r,f2i[0], f2i[1]);
 		System.out.printf("ADD:\t%s\t Test: %s, \tAssembly: %s, \t (A: %x%x, B: %x%x)\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
 
