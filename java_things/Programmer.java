@@ -151,13 +151,13 @@ public class Programmer {
 	private static void lw(int rs, int rt) {
 		// System.out.printf("%d, %x, %x\n", (reg[rt] & 0xFF), (reg[rt] & 0xFF), MEM[(reg[rt] & 0xFF)]);
 		reg[rs] = MEM[(reg[rt] & 0xFF)];
-		System.out.printf("%x, %x\n", MEM[(reg[rt] & 0xFF)], reg[rs]);
+		// System.out.printf("%x, %x\n", MEM[(reg[rt] & 0xFF)], reg[rs]);
 		creg[C] = 0;
 	}
 
 	private static void sw(int rs, int rt) {
 		MEM[(reg[rt] & 0xFF)] = reg[rs];
-		System.out.printf("%x, %x\n", MEM[(reg[rt] & 0xFF)], reg[rs]);
+		// System.out.printf("%x, %x\n", MEM[(reg[rt] & 0xFF)], reg[rs]);
 		creg[C] = 0;
 	}
 
