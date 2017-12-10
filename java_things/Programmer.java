@@ -205,24 +205,6 @@ public class Programmer {
 		MEM[131] = add_b[1];
 
 		System.out.printf("R0L value (0xffff): Int %d,%x,\t Float:%x%x\n", r0, r0, f2i[0], f2i[1]);
-
-		// 0 01111 0000000000 = 1
-		// 0 01111 0000000001 = 1 + 2−10 = 1.0009765625 (next smallest float after 1)
-		// 1 10000 0000000000 = −2
-        //
-		// 0 11110 1111111111 = 65504  (max half precision)
-        //
-		// 0 00001 0000000000 = 2−14 ≈ 6.10352 × 10−5 (minimum positive normal)
-		// 0 00000 1111111111 = 2−14 - 2−24 ≈ 6.09756 × 10−5 (maximum subnormal)
-		// 0 00000 0000000001 = 2−24 ≈ 5.96046 × 10−8 (minimum positive subnormal)
-        //
-		// 0 00000 0000000000 = 0
-		// 1 00000 0000000000 = −0
-        //
-		// 0 11111 0000000000 = infinity
-		// 1 11111 0000000000 = −infinity
-        //
-		// 0 01101 0101010101 = 0.333251953125 ≈ 1/3
 	}
 
 	private static void test() {
@@ -255,10 +237,10 @@ public class Programmer {
 			// Scanner sc = new Scanner(new File("immediates.txt"));
 
 			// File f = new File("code.txt");
-			String filename = "float2int.txt"
+			String filename = "float2int.txt";
             // Generate IM
 			if (args.length > 0){
-				f = args[0];
+				filename = args[0];
 			}
 			File f = new File(filename);
 			// BufferedReader b = new BufferedReader(new FileReader(f));
