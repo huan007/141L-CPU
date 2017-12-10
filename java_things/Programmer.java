@@ -46,14 +46,14 @@ public class Programmer {
 	private static void blt(int branch) {
 		if (CMP < 0) {
             // Jump by X
-			PC = PC + branch;
+			PC = PC + branch - 1;
 		}
 	}
 
 	private static void bne(int branch) {
 		if (CMP != 0) {
             // Jump by X
-			PC = PC + branch;
+			PC = PC + branch - 1;
 		}
 	}
 

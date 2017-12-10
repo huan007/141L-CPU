@@ -1,16 +1,16 @@
-26 2smaller //add
-7 rshift
-6 rshiftend
-16 notoverflow
--4 code.txt
-12 pos //F2i
-2 NOTEQ, EQ
-10 NoOverflow
-27 NEG
--5 loop1
-50 UNDEFLOW
--16 loop2
-12 NOROUND(1)
-6 ROUND(1)
-3 ROUND(2)
-2 NOROUND(2)
+27 2smaller //add
+8 rshift
+7 rshiftend
+17 notoverflow
+-3 code.txt
+13 pos //F2i
+3 NOTEQ, EQ
+11 NoOverflow
+28 NEG
+-4 loop1
+51 UNDEFLOW
+-17 loop2
+13 NOROUND(1)
+7 ROUND(1)
+4 ROUND(2)
+3 NOROUND(2)
