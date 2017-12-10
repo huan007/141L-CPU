@@ -170,7 +170,7 @@ imme $0, 7
 lsr $2, $0
 imme $0, 1
 cmp $2, $0
-bne 3 %notoverflow (+17)
+bne 3 %notoverflow (+18)
 imme $0, 20
 lw $1, $0
 imme $0, 21
