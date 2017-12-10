@@ -12,11 +12,11 @@ imme $1 ,11
 lw $1, $1
 imme $2, 29
 sw $1, $2
-imme $1 ,28
+imme $1 ,12
 lw $1, $1
-imme $2,30
+imme $2, 30
 sw $1, $2
-imme $1 ,29
+imme $1 ,13
 lw $1, $1
 imme $2, 31
 sw $1, $2
