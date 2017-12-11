@@ -58,13 +58,14 @@ public class Programmer {
 	}
 
 	private static void add(int rs, int rt) {
-		int val = reg[rs] + reg[rt];
+		int val = (reg[rs] & 0xFF) + (reg[rt] & 0xFF) ;
+		// System.out.printf("Val: %x, AND:%x, ANDSHIFT:%x\n", val, (byte)((val & 0x0100)), (byte)((val & 0x0100)>>8) );
 		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 	}
 
 	private static void addc(int rs, int rt) {
-		int val = reg[rs] + creg[rt];
+		int val = (reg[rs] & 0xFF) + (creg[rt] & 0xFF) ;
 		creg[C] = (byte)((val & 0x0100)>>8);
 		reg[rs] = (byte)(val & 0x00FF);
 	}
@@ -182,15 +183,21 @@ public class Programmer {
 
 		Random rn = new Random();
 		int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
-		int r1 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
-		int r2 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
+		// int r1 = rn.nextInt(MINMAX);
+		int sign = (rn.nextInt(2) << 15) & 0x08000;
+		int r1 = rn.nextInt(MINMAX) | sign;
+		int r2 = rn.nextInt(MINMAX) | sign;
 		int r3 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
-		// int r3 = 0x00008e54;
+		// int r0 = 0x8000;
+		// int r1 = 1;
+		// int r2 = 31;
 
 		f2i = new Programmer().new Half(r0).getbytes();
 		add_a = new Programmer().new Half(r1).getbytes();
-		add_b = new Programmer().new Half(r2).getbytes();
+		add_b = new Programmer().new Half(r1).getbytes();
+		// add_b = new Programmer().new Half(r2).getbytes();
 		i2f = new byte[] {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
+		// i2f = new byte[] {(byte) 0x080, 0};
 
 
 		MEM[0] = i2f[0];
@@ -232,7 +239,7 @@ public class Programmer {
 		System.out.printf("\n\n\n----------------------OVERALL----------------------\n\n\n");
 		System.out.printf("I2F:\t%s\t Test: %s, \tAssembly: %16s \t (INT: %x)\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), (i2f[0] << 8 | (i2f[1] & 0xFF)) & 0xFFFF);
 		System.out.printf("F2I:\t%s\t Test: %x, \t\t\tAssembly: %x \t (Float: %x%x)\n", String.valueOf(actual == f2i_r), actual, f2i_r,f2i[0], f2i[1]);
-		System.out.printf("ADD:\t%s\t Test: %s, \tAssembly: %s, \t (A: %x%x, B: %x%x)\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
+		System.out.printf("ADD:\t%s\t Test: %s, \tAssembly: %16s, \t (A: %x%x, B: %x%x)\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
 
 	}
 
@@ -434,7 +441,7 @@ public class Programmer {
 			this.sign = (0x00008000 & i) >> 15;
 			int exp = 29;
 			int bot014 = (0x00007FFF & i);
-			while ((bot014 & 0x00004000) == 0 && exp >= 0) {
+			while ((bot014 & 0x00004000) == 0 && exp > 0) {
 				exp--;
 				bot014 = bot014 << 1;
 			}
@@ -512,12 +519,15 @@ public class Programmer {
 			System.out.printf("%d, %d,  %x\n", other.exp, b, b);
 			System.out.printf("%d, %d, %x, %x\n", a, b, a, b);
 			if ((a & 0x00008000) == (b & 0x00008000)) {
-				return new Half((a + b) | 0x00008000 & 0x0000FFFF);
+				System.out.printf("%5x\n", ((((a + b) & 0x00007fff) | (a & 0x00008000)) & 0x0000FFFF));
+				return new Half((((a + b) & 0x00007fff) | (a & 0x00008000)) & 0x0000FFFF);
 			}
 			else if ((a & 0x00007FFF) > (b & 0x00007FFF)) {
+				System.out.printf("%5x\n", ((a & 0x00007fff) - (b & 0x00007fff)) | (a & 0x00007FFF));
 				return new Half(((a & 0x00007fff) - (b & 0x00007fff)) | (a & 0x00007FFF));
 			}
 			else {
+				System.out.printf("%5x\n", ((b & 0x00007fff) - (a & 0x00007fff)) | (b & 0x00007FFF));
 				return new Half(((b & 0x00007fff) - (a & 0x00007fff)) | (b & 0x00007FFF));
 			}
 		}

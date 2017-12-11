@@ -8,24 +8,24 @@
 7 (fixed)
 8 (fixed)
 9 #9
-128 A1(add),
+128 A1(add), (0x80)
 129 A2(add),
 130 B1(add),
 131 B2(add),
 14 LARGEEXP, sloc (fixed)
-15 DIFFEXP (variable)
-16 LOWERSIG, (variable)
-17 UPPERSIG, (variable)
-23 UPPERSIGA #23
+15 DIFFEXP (variable) ASIGNLOC
+16 LOWERSIG, (variable) BSINGLOC
+17 UPPERSIG, (variable) AEXPLOC
+23 UPPERSIGA #23 BEXPLOC
 255 UPPERSIGMASK, 255 FF
-132 UPPER,
-133 LOWER
-64 f2i MSHLoc fadd A1copy
-65 f2i LSHloc fadd A2copy
+132 UPPER, C1loc
+133 LOWER C2 loc
+64 f2i MSHLoc fadd A1copy AMANU
+65 f2i LSHloc fadd A2copy AMANL
 216 Huan
 25 SignLoc
-67 f2i LSHend fadd B1copy
-66 f2i MSHend fadd B2copy
+67 f2i LSHend fadd B1copy BMANU
+66 f2i MSHend fadd B2copy BMANL
 127 7F
 29
 30 (fixed)

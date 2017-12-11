@@ -24,9 +24,8 @@ alw $r3
 subc $r3 $r1
 asw $r3
 imme $r2 0
-imme $r3 1
 cmp $r2 $r3
-blt 17 LOOP (-13)
+bne 17 LOOP (-13)
 STOPLOOP
 imme $r2 8
 imme $r3 8
