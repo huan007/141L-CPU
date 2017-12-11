@@ -106,7 +106,7 @@ imme $2, 8
 sub $2, $0
 imme $0, 0
 cmp $2, $0
-blt 1 $rshift = (+8), maps to 1
+blt 1 %rshift = (+8), maps to 1
 
 lsl $3, $2
 imme $1, 19
@@ -147,8 +147,8 @@ sw $3, $0
 imme $0, 29
 lw $1, $0
 alw $2
-add $1, $2
 imme $3, 0
+add $1, $2
 addc $3, $3
 asw $3
 imme $0, 21
