@@ -65,18 +65,21 @@ always_comb								  // no registers, no clocks
         neg_o = result_o[7];
         end
   LSR: begin
-        {result_o, carry_o} = rs_i >> rt_i;
+        result_o = rs_i >> rt_i;
+        carry_o = (rs_i & ('h01  << (rt_i - 1))) >> (rt_i - 1);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
   LSRC: begin
-        if (rt == C) {carry_o, result_o} = (rs_i >> 1) | (rt_i << 7);
-        else {result_o, carry_o} = rs_i >> rt_i;
+        if (rt == C) result_o = (rs_i >> 1) | (rt_i << 7);
+        else result_o = rs_i >> rt_i;
+        carry_o = (rs_i & ('h01  << (rt_i - 1))) >> (rt_i - 1);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
   ASR: begin
-        {result_o, carry_o} = rs_i >>> rt_i;
+        result_o = rs_i >>> rt_i;
+        carry_o = (rs_i & ('h01  << (rt_i - 1))) >> (rt_i - 1);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
