@@ -20,6 +20,8 @@ module alu (input  [7:0]       rs_i ,	 // operand s
 
 op_code    op3; 	                     // type is op_code, as defined
 assign op3 = op_code'(op_i[8:1]);        // map 8 MSBs of op_i to op3 (ALU), cast to enum
+assign rt = op_i[1:0];
+localparam C = 3;
 
 always_comb								  // no registers, no clocks
   begin
@@ -57,7 +59,8 @@ always_comb								  // no registers, no clocks
         neg_o = result_o[7];
         end
   LSLC: begin
-        {carry_o, result_o} = rs_i << rt_i;
+        if (rt == C) {carry_o, result_o} = (rs_i << 1) | rt_i;
+        else {carry_o, result_o} = rs_i << rt_i;
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
@@ -67,7 +70,8 @@ always_comb								  // no registers, no clocks
         neg_o = result_o[7];
         end
   LSRC: begin
-        {result_o, carry_o} = rs_i >> rt_i;
+        if (rt == C) {carry_o, result_o} = (rs_i >> 1) | (rt_i << 7);
+        else {result_o, carry_o} = rs_i >> rt_i;
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
