@@ -14,7 +14,7 @@ module reg_file #(parameter count = 3, DW = 8) (
 );
 
 //the core itself
-logic [count-1:0] RF [2**count];
+logic [DW-1:0] RF [2**count];
 //two simultaneous, continuous read
 assign rs_val_o = RF [{0,rs}];
 assign rt_val_o = RF [rt];

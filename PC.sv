@@ -4,14 +4,14 @@ module IF (
 	input halt,
 	input clk,
 	input [7:0] newAddress,
-	output logic[7:0] PC);
+	output logic[7:0] core);
 
 	always_ff @ (posedge clk)
 		if(reset)
-			PC <= 0;
+			core <= 0;
 		else if (halt)
-			PC <= PC;
+			core <= core;
 		else
-			PC <= newAddress;
+			core <= newAddress;
 
 endmodule
