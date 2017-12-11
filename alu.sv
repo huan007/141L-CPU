@@ -28,26 +28,78 @@ always_comb								  // no registers, no clocks
     neg_o     = 'd0;
     zero_o    = 'd0;
   case (op3)
-    //IMME:
-    //BLT:
-    //BNE:
-  ADD: {carry_o, result_o} = rs_i + rt_i;
-  ADDC: {carry_o, result_o} = rs_i + rt_i;
-  SUB: {carry_o, result_o} = rs_i - rt_i;
-  SUBC: {carry_o, result_o} = rs_i - rt_i;
-  LSL: {carry_o, result_o} = rs_i << rt_i;
-  LSLC: {carry_o, result_o} = rs_i << rt_i;
-  LSR: {result_o, carry_o} = rs_i >> rt_i;
-  LSRC: {result_o, carry_o} = rs_i >> rt_i;
-  ASR: {result_o, carry_o} = rs_i >>> rt_i;
-  NEG: result_o = ~rt_i;
-  AND: result_o = rs_i & rt_i;
-  OR: result_o = rs_i | rt_i;
-  CMP: result_o = rs_i - rt_i;
-    //LW:
-    //SW:
-    //ALW:
-    //ASW:
+    //IMME: Does nothing ?
+    //BLT: Does nothing ?
+    //BNE: Does nothing ?
+  ADD: begin
+        {carry_o, result_o} = rs_i + rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  ADDC: begin
+        {carry_o, result_o} = rs_i + rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  SUB: begin
+        {carry_o, result_o} = rs_i - rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  SUBC: begin
+        {carry_o, result_o} = rs_i - rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  LSL: begin
+        {carry_o, result_o} = rs_i << rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  LSLC: begin
+        {carry_o, result_o} = rs_i << rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  LSR: begin
+        {result_o, carry_o} = rs_i >> rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  LSRC: begin
+        {result_o, carry_o} = rs_i >> rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  ASR: begin
+        {result_o, carry_o} = rs_i >>> rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  NEG: begin
+        result_o = ~rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  AND: begin
+        result_o = rs_i & rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  OR: begin
+        result_o = rs_i | rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+  CMP: begin
+        result_o = rs_i - rt_i;
+        zero_o = result_o || 'd0;
+        neg_o = result_o[7];
+        end
+    //LW: Does nothing ?
+    //SW: Does nothing ?
+    //ALW: Does nothing ?
+    //ASW: Does nothing ?
     //HALT: idk what happens
     endcase
   end
