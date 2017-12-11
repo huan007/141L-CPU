@@ -183,19 +183,15 @@ public class Programmer {
 
 		Random rn = new Random();
 		int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
-		// int r1 = rn.nextInt(MINMAX);
 		int sign = (rn.nextInt(2) << 15) & 0x08000;
 		int r1 = rn.nextInt(MINMAX) | sign;
 		int r2 = rn.nextInt(MINMAX) | sign;
 		int r3 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
-		// int r0 = 0x8000;
-		// int r1 = 1;
-		// int r2 = 31;
 
 		f2i = new Programmer().new Half(r0).getbytes();
 		add_a = new Programmer().new Half(r1).getbytes();
-		add_b = new Programmer().new Half(r1).getbytes();
-		// add_b = new Programmer().new Half(r2).getbytes();
+		// add_b = new Programmer().new Half(r1).getbytes();
+		add_b = new Programmer().new Half(r2).getbytes();
 		i2f = new byte[] {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
 		// i2f = new byte[] {(byte) 0x080, 0};
 
@@ -238,8 +234,8 @@ public class Programmer {
 
 		System.out.printf("\n\n\n----------------------OVERALL----------------------\n\n\n");
 		System.out.printf("I2F:\t%s\t Test: %s, \tAssembly: %16s \t (INT: %x)\n", String.valueOf(i2f_h.equals(i2f_r)), i2f_h.toString(), i2f_r.toString(), (i2f[0] << 8 | (i2f[1] & 0xFF)) & 0xFFFF);
-		System.out.printf("F2I:\t%s\t Test: %x, \t\t\tAssembly: %x \t (Float: %x%x)\n", String.valueOf(actual == f2i_r), actual, f2i_r,f2i[0], f2i[1]);
-		System.out.printf("ADD:\t%s\t Test: %s, \tAssembly: %16s, \t (A: %x%x, B: %x%x)\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
+		System.out.printf("F2I:\t%s\t Test: %x, \t\t\tAssembly: %x \t (Float: %2x%2x)\n", String.valueOf(actual == f2i_r), actual, f2i_r,f2i[0], f2i[1]);
+		System.out.printf("ADD:\t%s\t Test: %s, \tAssembly: %16s, \t (A: %2x%2x, B: %2x%2x)\n", String.valueOf(res.equals(add_res)), res.toString(), add_res.toString(), add_a[0], add_a[1], add_b[0], add_b[1]);
 
 	}
 
@@ -436,6 +432,16 @@ public class Programmer {
 			bitstring = Integer.toBinaryString(((m << 8) | (l & 0xff)) & 0x0000FFFF);
 			System.out.printf("%x%x S:%d Exp: %d, %x, Man: %x, BITS: %s\n", m,l, this.sign, this.exp, this.exp, this.man, this.bitstring);
 		}
+
+		public Half(int sign, int exp, int man) {
+			this.sign = sign;
+			this.exp = exp;
+			this.man = man;
+			this.bitstring = String.format("%1s", Integer.toBinaryString(sign)).replace(' ', '0');
+			bitstring += String.format("%5s", Integer.toBinaryString(exp)).replace(' ', '0');
+			bitstring += String.format("%10s", Integer.toBinaryString(man & 0x03FF)).replace(' ', '0');
+		}
+
 		public Half(int i) {
 			System.out.printf("Generating from int %x\n", i & 0x0000FFFF);
 			this.sign = (0x00008000 & i) >> 15;
@@ -462,27 +468,26 @@ public class Programmer {
 			this.exp = exp;
 			String bits = "";
 			bits = Integer.toBinaryString(this.sign);
-			System.out.printf("BITS sign: %s\n", bits);
-			String expbits = Integer.toBinaryString(exp);
-			while (expbits.length() < 5) {
-				expbits = "0" + expbits;
-			}
-			bits = bits + expbits;
-			System.out.printf("BITS signexp: %s, %d\n", bits, exp);
-			String manbits = Integer.toBinaryString(man & 0x000003ff);
-			System.out.printf("MANBITS: %s, MAN %x\n", manbits, man);
-			// if (manbits.length() == 11) {
-			// 	manbits = manbits.substring(0,10);
-			// 	// System.out.printf("Cutting manbits" + manbits + "\n");
+			bits += String.format("%5s", Integer.toBinaryString(exp)).replace(' ', '0');
+
+			// while (expbits.length() < 5) {
+			// 	expbits = "0" + expbits;
 			// }
-			while (manbits.length() < 10) {
-				manbits = "0" + manbits;
-				// System.out.printf("Filling manbits" + manbits + "\n");
-			}
-			bits += manbits;
+			// bits = bits + expbits;
+			System.out.printf("BITS signexp: %s, %d\n", bits, exp);
+			// String manbits = Integer.toBinaryString(man & 0x000003ff);
+			// System.out.printf("MANBITS: %s, MAN %x\n", manbits, man);
+            //
+			// while (manbits.length() < 10) {
+			// 	manbits = "0" + manbits;
+			// 	// System.out.printf("Filling manbits" + manbits + "\n");
+			// }
+			bits += String.format("%10s", Integer.toBinaryString(man & 0x03FF)).replace(' ', '0');
+
+			// bits += manbits;
 			System.out.printf("BITS Final: %s\n", bits);
 			this.bitstring = bits;
-			System.out.printf("%s\n",bits);
+			// System.out.printf("%s\n",bits);
 		}
 
 		public Half(String bits) {
@@ -511,24 +516,66 @@ public class Programmer {
 			return ret;
 		}
 
+		// public Half add(Half other) {
+		// 	System.out.printf("Adding " + this.bitstring + ", " +  other.bitstring + "\n");
+		// 	int a = this.toInt();
+		// 	System.out.printf("%d, %d,  %x\n", this.exp, a, a);
+		// 	int b = other.toInt();
+		// 	System.out.printf("%d, %d,  %x\n", other.exp, b, b);
+		// 	System.out.printf("%d, %d, %x, %x\n", a, b, a, b);
+		// 	if ((a & 0x00008000) == (b & 0x00008000)) {
+		// 		System.out.printf("%5x\n", ((((a + b) & 0x00007fff) | (a & 0x00008000)) & 0x0000FFFF));
+		// 		return new Half((((a + b) & 0x00007fff) | (a & 0x00008000)) & 0x0000FFFF);
+		// 	}
+		// 	else if ((a & 0x00007FFF) > (b & 0x00007FFF)) {
+		// 		System.out.printf("%5x\n", ((a & 0x00007fff) - (b & 0x00007fff)) | (a & 0x00007FFF));
+		// 		return new Half(((a & 0x00007fff) - (b & 0x00007fff)) | (a & 0x00007FFF));
+		// 	}
+		// 	else {
+		// 		System.out.printf("%5x\n", ((b & 0x00007fff) - (a & 0x00007fff)) | (b & 0x00007FFF));
+		// 		return new Half(((b & 0x00007fff) - (a & 0x00007fff)) | (b & 0x00007FFF));
+		// 	}
+		// }
+
 		public Half add(Half other) {
 			System.out.printf("Adding " + this.bitstring + ", " +  other.bitstring + "\n");
-			int a = this.toInt();
-			System.out.printf("%d, %d,  %x\n", this.exp, a, a);
-			int b = other.toInt();
-			System.out.printf("%d, %d,  %x\n", other.exp, b, b);
-			System.out.printf("%d, %d, %x, %x\n", a, b, a, b);
-			if ((a & 0x00008000) == (b & 0x00008000)) {
-				System.out.printf("%5x\n", ((((a + b) & 0x00007fff) | (a & 0x00008000)) & 0x0000FFFF));
-				return new Half((((a + b) & 0x00007fff) | (a & 0x00008000)) & 0x0000FFFF);
+			int m1 = this.man;
+			int m2 = other.man;
+			int e = this.exp;
+			int c;
+			int R = 0;
+			int S = 0;
+
+			if (this.exp > other.exp) {
+				m2 = other.man >> (this.exp - other.exp);
+				e = this.exp;
+				R = other.man & (1 << (this.exp - other.exp - 1));
+				S = other.man - (m2 << (this.exp - other.exp)) - R;
+				System.out.printf("A, R: %x, S: %x, man:%x\n", R, S, other.man);
 			}
-			else if ((a & 0x00007FFF) > (b & 0x00007FFF)) {
-				System.out.printf("%5x\n", ((a & 0x00007fff) - (b & 0x00007fff)) | (a & 0x00007FFF));
-				return new Half(((a & 0x00007fff) - (b & 0x00007fff)) | (a & 0x00007FFF));
+			else if (this.exp < other.exp) {
+				m1 = this.man >> (other.exp - this.exp);
+				e = other.exp;
+				R = this.man & (1 << (other.exp - this.exp - 1));
+				S = this.man - (m1 << (other.exp - this.exp)) - R;
+				System.out.printf("B, R: %x, S: %x, man:%x\n", R, S, this.man);
+			}
+
+			if (this.sign == other.sign) {
+				c = m1 + m2;
+				if ((R != 0) && (S > 0 || ((c & 0x1) == 1))) {
+					System.out.printf("Rounding\n");
+					c += 1;
+				}
+				if ((c & 0x800) != 0) {
+					System.out.printf("shifting\n");
+					c = c >> 1;
+					e++;
+				}
+				return new Half(this.sign, e, c);
 			}
 			else {
-				System.out.printf("%5x\n", ((b & 0x00007fff) - (a & 0x00007fff)) | (b & 0x00007FFF));
-				return new Half(((b & 0x00007fff) - (a & 0x00007fff)) | (b & 0x00007FFF));
+				return new Half(0);
 			}
 		}
 
