@@ -46,7 +46,7 @@ module top(
 
   wire [7:0] DataOut;
   logic[7:0] rf_select;            // data bus
-  logic[7:0] DataAddress;
+  //logic[7:0] DataAddress;
 
   //TODO, need wires ? or logic ? for IMMEout, BranchOut
   wire [7:0] ImmeOut;
@@ -71,12 +71,13 @@ IF IF1(
   );
 
 //InstROM (here by default)
-//TODO check .IW(16)
+//TODO check .IW(16), should it be .IW(9)?
 InstROM #(.IW(16)) InstROM1(
   .InstAddress (PC),	// address pointer
   .InstOut (InstOut));
 
 //Decoder TODO check .IW(16)
+//TODO decoder outputs temp_mem/special_reg but are never used
 decoder #(.IW(16)) (
 	.instruction (InstOut)),
 	.control_signals (control_signals),
@@ -88,6 +89,9 @@ decoder #(.IW(16)) (
 //branchLUT TODO problem the module signatures are the same as InstROM1
 
 //TODO do we need .raw(3)
+//problem, we need to differentiate between regular reads and carry reads which
+//read from extended set of registers, right now it looks like everything
+//reads from regular registers
 reg_file #(.raw(3)) rf1	 (
   .clk		     (clk		    ),   // clock (for writes only)
   .rs_addr_i	 (InstOut[2:0]  ),   // read pointer rs
@@ -100,7 +104,7 @@ reg_file #(.raw(3)) rf1	 (
   .rt_val_o		 (rt_val_o	    )
                 );
 
-//TODO rf_sel is regsrc; created mux.
+//rf_sel is regsrc; created mux.
 case(rf_sel):
   2'b00: rf_select = result_o;
   2'b01: rf_select = ImmeOut;
@@ -112,29 +116,29 @@ endcase
 //assign rf_select = rf_sel? DataOut : result_o;	// supports load commands
 //replaced with mux above
 
-alu alu1(.rs_i     (alu_mux)     , //TODO no mux needed before alu
+alu alu1(.rs_i     (rs_val_o)     ,
          .rt_i	   (rt_val_o)	  ,
          .op_i	   (InstOut)	  ,
 // outputs
          .result_o (result_o) ,
-		 .carry_o     (ov_o    ) ,
-     .neg_o     (neg_o    ) ,
-     .zero_o     (zero_o    ));
+		       .carry_o     (ov_o    ) ,
+           .neg_o     (neg_o    ) ,
+           .zero_o     (zero_o    ));
 
-//TODO check but looks like it will work as is
+// check but looks like it will work as is
 data_mem dm1(
    .CLK           (clk        ),
-   .DataAddress   (DataAddress),
-   .ReadMem       (1'b1       ), // mem read always on
-   .WriteMem      (WriteMem   ), // 1: mem_store
+   .DataAddress   (rs_val_o),
+   .ReadMem       (memread_i       ), // mem read always on
+   .WriteMem      (memwrite_i   ), // 1: mem_store
    .DataIn        (rs_val_o   ), // store (from RF)
    .DataOut       (DataOut    )  // load  (to RF)
 );
 
 logic[14:0] dummy;
 case ()
-//TODO I'm assigning the control signals here
-//TODO I don't think the ones in comment are needed (here by default)
+//I'm assigning the control signals here
+//I don't think the ones in comment are needed (here by default)
 //assign             Rel_Jump = &(InstOut[8:3]);//&&ov_o;
 //assign             Abs_Jump = &(InstOut[8:0])&&alu_z_o;
 //assign             alu_mux = InstOut[8:6]==5? 8'b0 : rs_val_o;
@@ -155,11 +159,11 @@ assign             rf_sel = control_signals[1:0];
 //  .lut_val(wen_i)//({dummy,wen_i})
 //);
 
-//TODO idk what this does exactly or if needed
-always_ff @(posedge clk)   // one-bit carry/shift
-  if(carry_clr==1'b1)
-    ov_i <= 1'b0;
-  else if(carry_en==1'b1)
-    ov_i <= ov_o;
+// commented out because we use different carry system
+//always_ff @(posedge clk)   // one-bit carry/shift
+//  if(carry_clr==1'b1)
+//    ov_i <= 1'b0;
+//  else if(carry_en==1'b1)
+//    ov_i <= ov_o;
 
 endmodule
