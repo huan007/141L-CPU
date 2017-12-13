@@ -52,10 +52,12 @@ module top(
   wire [7:0] ImmeOut;
   wire [7:0] BranchOut;
 
+  //Decoder's wires
   logic [OW-1:0] 	control_signals;
   logic special_reg;
-	logic temp_mem;
+  logic temp_mem;
 
+//COMPONENT: PC
 IF IF1(
   //.Abs_Jump (Abs_Jump)  ,   // branch to "offset"
   //.Rel_Jump (Rel_Jump)	 ,	// branch by "offset"
@@ -70,19 +72,21 @@ IF IF1(
   .core       (core )
   );
 
+//COMPONENT: INSTRUCTION MEMORY
+
 //InstROM (here by default)
 //TODO check .IW(16), should it be .IW(9)?
-InstROM #(.IW(16)) InstROM1(
+InstROM InstROM1(
   .InstAddress (PC),	// address pointer
   .InstOut (InstOut));
 
 //Decoder TODO check .IW(16)
 //TODO decoder outputs temp_mem/special_reg but are never used
-decoder #(.IW(16)) (
-	.instruction (InstOut)),
+decoder decoder1 (
+	.instruction (InstOut),
 	.control_signals (control_signals),
-	.special_reg   (special_reg),
-	.temp_mem      (temp_mem));
+	.special_reg   (special_reg),		//MSB of rt
+	.temp_mem      (temp_mem));			//Control signal for mux before MEM
 
 //immeLUT TODO problem the module signatures are the same as InstROM1
 
@@ -92,25 +96,26 @@ decoder #(.IW(16)) (
 //problem, we need to differentiate between regular reads and carry reads which
 //read from extended set of registers, right now it looks like everything
 //reads from regular registers
-reg_file #(.raw(3)) rf1	 (
+reg_file rf1	 (
   .clk		     (clk		    ),   // clock (for writes only)
-  .rs_addr_i	 (InstOut[2:0]  ),   // read pointer rs
-  .rt_addr_i	 (InstOut[5:3]  ),   // read pointer rt
-  .wen_i		 (wen_i		    ),   // write enable
-  .coutwen_i		 (coutwen_i		    ),   // cout write enable
-  .write_data_i	 (rf_select     ),   // data to be written/loaded
-  .cout_data_i	 (ov_o),   // cout to be written/loaded
+  .rs	 (InstOut[1:0]  ),   // read pointer rs (2 bits)
+  .rt	 ({special_reg, InstOut[3:2]}  ),   // read pointer rt (3 bits)
+  .write_enable		 (wen_i		    ),   // write enable
+  .cout_write_enable		 (coutwen_i		    ),   // cout write enable
+  .write_data	 (rf_select     ),   // data to be written/loaded
+  .cout_data	 (ov_o),   // cout to be written/loaded
   .rs_val_o	     (rs_val_o	    ),   // data read out of reg file
   .rt_val_o		 (rt_val_o	    )
                 );
 
 //rf_sel is regsrc; created mux.
-case(rf_sel):
-  2'b00: rf_select = result_o;
-  2'b01: rf_select = ImmeOut;
-  2'b10: rf_select = DataOut;
-  2'b11: rf_select = 2h'00; //no write
-endcase
+Mux_4_To_1 Reg_src_mux(
+	.i_Select(rf_sel),
+	.i_Data1(result_o),
+	.i_Data2(ImmeOut),
+	.i_Data3(DataOut),
+	.i_Data4(8'h00),
+	.o_Data());
 
 
 //assign rf_select = rf_sel? DataOut : result_o;	// supports load commands
@@ -120,10 +125,10 @@ alu alu1(.rs_i     (rs_val_o)     ,
          .rt_i	   (rt_val_o)	  ,
          .op_i	   (InstOut)	  ,
 // outputs
-         .result_o (result_o) ,
-		       .carry_o     (ov_o    ) ,
-           .neg_o     (neg_o    ) ,
-           .zero_o     (zero_o    ));
+         .result_o (result_o	) ,
+         .carry_o  (ov_o    	) ,
+         .neg_o    (neg_o    	) ,
+         .zero_o   (zero_o    	));
 
 // check but looks like it will work as is
 data_mem dm1(
@@ -136,7 +141,7 @@ data_mem dm1(
 );
 
 logic[14:0] dummy;
-case ()
+//case ()
 //I'm assigning the control signals here
 //I don't think the ones in comment are needed (here by default)
 //assign             Rel_Jump = &(InstOut[8:3]);//&&ov_o;
