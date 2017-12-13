@@ -9,10 +9,10 @@ module top(
         reset,
   output logic done
 );
-  parameter IW = 16;				// program counter / instruction pointer
+  parameter IW = 8;				// program counter / instruction pointer
                             // TODO should this be 8
   parameter OW = 10;
-  logic signed[15:0] Offset = 16'd10;
+  //logic signed[15:0] Offset = 16'd10;
   wire[IW-1:0] PC;                    // pointer to insr. mem
   wire[   8:0] InstOut;				// 9-bit machine code from instr ROM
   wire[   7:0] rt_val_o,			// reg_file data outputs to ALU
@@ -47,17 +47,16 @@ module top(
 
 //COMPONENT: PC
 IF IF1(
-  //.Abs_Jump (Abs_Jump)  ,   // branch to "offset"
-  //.Rel_Jump (Rel_Jump)	 ,	// branch by "offset"
-  //.Offset   (Offset  )	 ,
-  .reset    (reset   )	 ,
-  .halt     (Halt    )	 ,     //TODO this was 1b'0, should it be Halt
+  .branchsig (branchsig_i),
+  .branchtype (branchtype_i),
+  .BranchOut (BranchOut),
+  .zero (zero_o),
+  .negative (neg_o),
+  .reset    (reset   ),
+  .halt     (Halt    ),
   .clk      (clk     ),
-  .newAddress (PC      ),      // pointer to insr. mem
-                                // TODO PC input (newAddress) in our
-                                // implementation looks like its 16 bits
-                                // instead of 8; see above need some help here
-  .core       (core )
+//  .newAddress (      ), //TODO pointer to insr. mem how do we determine newAddress
+  .core       (PC )
   );
 
 //COMPONENT: INSTRUCTION MEMORY
@@ -138,6 +137,7 @@ assign             branchtype_i = control_signals[8];
 assign             wen_i = control_signals[7];
 assign             coutwen_i = control_signals[6];
 //TODO isn't reset an input
+                  reset = control_signals[5]
 assign             Halt = control_signals[4];
 assign             memread_i = control_signals[3];
 assign             memwrite_i = control_signals[2];
