@@ -23,6 +23,9 @@ module top(
   wire neg_o;
   wire zero_o;
 
+  //
+  logic [7:0] CMP;
+
   //control_signals
   logic branchsig_i;
   logic branchtype_i;
@@ -50,8 +53,7 @@ IF IF1(
   .branchsig (branchsig_i),
   .branchtype (branchtype_i),
   .BranchOut (BranchOut),
-  .zero (zero_o),
-  .negative (neg_o),
+  .cmp       (CMP),
   .reset    (reset   ),
   .halt     (Halt    ),
   .clk      (clk     ),
@@ -105,11 +107,12 @@ Mux_4_To_1 Reg_src_mux(
 	.i_Data4(8'h00),
 	.o_Data());
 
-alu alu1(.rs_i     (rs_val_o)     ,
+alu alu1(.rs_i     (rs_val_o)   ,
          .rt_i	   (rt_val_o)	  ,
          .op_i	   (InstOut)	  ,
 // outputs
          .result_o (result_o	) ,
+         .cmp      (CMP       ) ,
          .carry_o  (ov_o    	) ,
          .neg_o    (neg_o    	) ,
          .zero_o   (zero_o    	));

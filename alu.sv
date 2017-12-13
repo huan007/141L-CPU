@@ -14,6 +14,7 @@ module alu (input  [7:0]       rs_i ,	 // operand s
             input  [7:0]       rt_i	,	 // operand t
             input  [8:0]       op_i	,	 // instruction / opcode
             output logic [7:0] result_o,	 // rslt
+            output logic [7:0] cmp,
 			      output logic       carry_o,
             output logic       neg_o,
             output logic       zero_o);
@@ -99,7 +100,7 @@ always_comb								  // no registers, no clocks
         neg_o = result_o[7];
         end
   CMP: begin
-        result_o = rs_i - rt_i;
+        cmp = rs_i - rt_i;
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end

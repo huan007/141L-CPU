@@ -2,12 +2,11 @@
 module IF (
 	input branchsig,
 	input branchtype,
-	input zero,
-	input negative,
+	input cmp,
 	input [7:0] BranchOut,
 	input reset,
 	input halt,
-	input clk,
+	input [7:0] clk,
 	//input [7:0] newAddress,
 	output logic[7:0] core);
 
@@ -18,12 +17,12 @@ module IF (
 			core <= core;
 		else if (branchsig==1'b1) //if branch instruction
 			if(branchtype==1'b0)
-				if(negative==1'b0)
+				if(cmp<2'h00)
 					core <= core + BranchOut;
 				else
 					core <= core + 1; //blt
 			else
-				if(zero==1'b1)
+				if(cmp!=2'h00)
 					core <= core + BranchOut;
 				else
 					core <= core + 1; //bne
