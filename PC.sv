@@ -16,11 +16,17 @@ module IF (
 			core <= 0;
 		else if (halt)
 			core <= core;
-		else if (branchsig==0b'1) //if branch instruction
-			case(branchtype) //branch lt or ne
-				1b'0:	(negative==0b'0) ? core <= core + BranchOut : core <= core + 1 //blt
-				1b'1: (zero==0b'1) ? core <= core + BranchOut : core <= core + 1 //bne
-			endcase
+		else if (branchsig==1'b1) //if branch instruction
+			if(branchtype==1'b0)
+				if(negative==1'b0)
+					core <= core + BranchOut;
+				else
+					core <= core + 1; //blt
+			else
+				if(zero==1'b1)
+					core <= core + BranchOut;
+				else
+					core <= core + 1; //bne
 		else
 			core <= core + 1; //normal advance
 		//	core <= newAddress;
