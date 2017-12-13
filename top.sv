@@ -147,4 +147,16 @@ assign             memread_i = control_signals[3];
 assign             memwrite_i = control_signals[2];
 assign             rf_sel = control_signals[1:0];
 
+//Initialize regFile
+initial begin
+	rf1.RF[0] = 8'h00;
+	rf1.RF[1] = 8'h00;
+	rf1.RF[2] = 8'h00;
+	rf1.RF[3] = 8'h00;
+	rf1.RF[4] = 8'h00;
+	rf1.RF[5] = 8'h00;
+	rf1.RF[6] = 8'h00;
+	rf1.RF[7] = 8'h00;
+end
+
 endmodule
