@@ -54,7 +54,7 @@ IF IF1(
   .branchsig (branchsig_i),
   .branchtype (branchtype_i),
   .BranchOut (BranchOut),
-  .cmp       (CMP),
+  .cmp       (CMP[0]),
   .reset    (reset   ),
   .halt     (Halt    ),
   .clk      (clk     ),
@@ -70,7 +70,7 @@ InstROM InstROM1(
   .InstOut (InstOut));
 
 decoder decoder1 (
-	.instruction (InstOut),
+	.instruction (InstOut[8:1]),
 	.control_signals (control_signals),
 	.special_reg   (special_reg),		//MSB of rt
 	.temp_mem      (temp_mem));			//Control signal for mux before MEM
@@ -83,7 +83,7 @@ branchLUT branchLUT1 (
 
 //immeLUT
 immeLUT immeLUT1 (
-  .InstAddress    (InstOut[5:0]),
+  .InstAddress    (InstOut[4:0]),
   .ImmeOut      (ImmeOut)
 );
 
@@ -94,10 +94,9 @@ reg_file rf1	 (
   .write_enable		 (wen_i		    ),   // write enable
   .cout_write_enable		 (coutwen_i		    ),   // cout write enable
   .write_data	 (rf_select     ),   // data to be written/loaded
-  .cout_data	 (ov_o),   // cout to be written/loaded
+  .cout_data	 ({7'b0,ov_o}),   // cout to be written/loaded
   .rs_val_o	     (rs_val_o	    ),   // data read out of reg file
-  .rt_val_o		 (rt_val_o	    )
-                );
+  .rt_val_o		 (rt_val_o	    ));
 
 //rf_sel is regsrc; created mux.
 Mux_4_To_1 Reg_src_mux(
@@ -121,12 +120,12 @@ alu alu1(.rs_i     (rs_val_o)   ,
 //Add a mux before memAddress to support ALW and ASW
 Mux_2_To_1 mem_Address_mux (
 	.i_Select(temp_mem),
-	.i_Data1(IMMEout),
+	.i_Data1(ImmeOut),
 	.i_Data2(8'h80),			//tempMemLocation = 128
 	.o_Data(mem_Address_i));
 // check but looks like it will work as is
 data_mem dm1(
-   .CLK           (clk        ),
+   .clk           (clk        ),
    .DataAddress   (mem_Address_i),
    .ReadMem       (memread_i       ), // mem read always on
    .WriteMem      (memwrite_i   ), // 1: mem_store
