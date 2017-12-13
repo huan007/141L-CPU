@@ -77,7 +77,7 @@ begin
 
 	endcase
 	//Generate specialReg
-	assign special_reg = ~control_signals[6] & control_signals [3];
+	assign special_reg = ~instruction[6] & instruction[3];
 end
 
 endmodule
