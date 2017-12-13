@@ -19,11 +19,12 @@ module top(
                rs_val_o,			//
                result_o;			// ALU data output
 
+  //carry, neg, zero
   wire ov_o;
   wire neg_o;
   wire zero_o;
 
-  //
+  //cmp register
   logic [7:0] CMP;
 
   //control_signals
@@ -140,7 +141,7 @@ assign             branchtype_i = control_signals[8];
 assign             wen_i = control_signals[7];
 assign             coutwen_i = control_signals[6];
 //TODO isn't reset an input
-                  reset = control_signals[5]
+assign             reset = control_signals[5];
 assign             Halt = control_signals[4];
 assign             memread_i = control_signals[3];
 assign             memwrite_i = control_signals[2];
