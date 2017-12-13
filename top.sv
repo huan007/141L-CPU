@@ -44,6 +44,7 @@ module top(
   //logic ov_i; we don't have carry_in should be not needed
   //logic[7:0] alu_mux; not needed
 
+  wire [7:0] mem_Address_i;		   // 8 bit address
   wire [7:0] DataOut;
   logic[7:0] rf_select;            // data bus
   //logic[7:0] DataAddress;
@@ -130,10 +131,16 @@ alu alu1(.rs_i     (rs_val_o)     ,
          .neg_o    (neg_o    	) ,
          .zero_o   (zero_o    	));
 
+//Add a mux before memAddress to support ALW and ASW
+Mux_2_To_1 mem_Address_mux (
+	.i_Select(temp_mem),
+	.i_Data1(IMMEout),
+	.i_Data2(8'h80),			//tempMemLocation = 128
+	.o_Data(mem_Address_i));
 // check but looks like it will work as is
 data_mem dm1(
    .CLK           (clk        ),
-   .DataAddress   (rs_val_o),
+   .DataAddress   (mem_Address_i),
    .ReadMem       (memread_i       ), // mem read always on
    .WriteMem      (memwrite_i   ), // 1: mem_store
    .DataIn        (rs_val_o   ), // store (from RF)

@@ -1,4 +1,4 @@
-module Mux_2_To_1_Width #(parameter g_WIDTH = 8)
+module Mux_2_To_1 #(parameter g_WIDTH = 8)
   (input  i_Select,
    input  [g_WIDTH-1:0] i_Data1,
    input  [g_WIDTH-1:0] i_Data2,
