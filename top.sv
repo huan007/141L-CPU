@@ -12,8 +12,6 @@ module top(
   parameter IW = 16;				// program counter / instruction pointer
                             // TODO should this be 8
   parameter OW = 10;
-  //logic              Abs_Jump,// = 1'b0, // branch to "offset"
-  //                   Rel_Jump;		// branch by "offset"
   logic signed[15:0] Offset = 16'd10;
   wire[IW-1:0] PC;                    // pointer to insr. mem
   wire[   8:0] InstOut;				// 9-bit machine code from instr ROM
@@ -21,11 +19,9 @@ module top(
                rs_val_o,			//
                result_o;			// ALU data output
 
-  wire ov_o;   // I'm guessing this is carry
+  wire ov_o;
   wire neg_o;
   wire zero_o;
-
-  //wire alu_z_o;
 
   //control_signals
   logic branchsig_i;
@@ -37,21 +33,12 @@ module top(
   logic Halt;
   logic[1:0] rf_sel;			   // this is regsrc
 
-
-  //logic carry_en = 1'b1;            //TODO I don't know what these do
-  //logic carry_clr;
-  //assign carry_clr = reset;
-  //logic ov_i; we don't have carry_in should be not needed
-  //logic[7:0] alu_mux; not needed
-
   wire [7:0] mem_Address_i;		   // 8 bit address
   wire [7:0] DataOut;
   logic[7:0] rf_select;            // data bus
-  //logic[7:0] DataAddress;
 
-  //TODO, need wires ? or logic ? for IMMEout, BranchOut
-  wire [7:0] ImmeOut;
-  wire [7:0] BranchOut;
+  logic [7:0] ImmeOut;
+  logic [7:0] BranchOut;
 
   //Decoder's wires
   logic [OW-1:0] 	control_signals;
@@ -76,27 +63,28 @@ IF IF1(
 //COMPONENT: INSTRUCTION MEMORY
 
 //InstROM (here by default)
-//TODO check .IW(16), should it be .IW(9)?
 InstROM InstROM1(
   .InstAddress (PC),	// address pointer
   .InstOut (InstOut));
 
-//Decoder TODO check .IW(16)
-//TODO decoder outputs temp_mem/special_reg but are never used
 decoder decoder1 (
 	.instruction (InstOut),
 	.control_signals (control_signals),
 	.special_reg   (special_reg),		//MSB of rt
 	.temp_mem      (temp_mem));			//Control signal for mux before MEM
 
-//immeLUT TODO problem the module signatures are the same as InstROM1
+//branchLUT
+branchLUT branchLUT1 (
+  .InstAddress    (InstOut[5:0]),
+  .BranchOut      (BranchOut)
+);
 
-//branchLUT TODO problem the module signatures are the same as InstROM1
+//immeLUT
+immeLUT immeLUT1 (
+  .InstAddress    (InstOut[5:0]),
+  .ImmeOut      (ImmeOut)
+);
 
-//TODO do we need .raw(3)
-//problem, we need to differentiate between regular reads and carry reads which
-//read from extended set of registers, right now it looks like everything
-//reads from regular registers
 reg_file rf1	 (
   .clk		     (clk		    ),   // clock (for writes only)
   .rs	 (InstOut[1:0]  ),   // read pointer rs (2 bits)
@@ -117,10 +105,6 @@ Mux_4_To_1 Reg_src_mux(
 	.i_Data3(DataOut),
 	.i_Data4(8'h00),
 	.o_Data());
-
-
-//assign rf_select = rf_sel? DataOut : result_o;	// supports load commands
-//replaced with mux above
 
 alu alu1(.rs_i     (rs_val_o)     ,
          .rt_i	   (rt_val_o)	  ,
@@ -149,12 +133,6 @@ data_mem dm1(
 
 logic[14:0] dummy;
 //case ()
-//I'm assigning the control signals here
-//I don't think the ones in comment are needed (here by default)
-//assign             Rel_Jump = &(InstOut[8:3]);//&&ov_o;
-//assign             Abs_Jump = &(InstOut[8:0])&&alu_z_o;
-//assign             alu_mux = InstOut[8:6]==5? 8'b0 : rs_val_o;
-
 assign             branchsig_i = control_signals[9];
 assign             branchtype_i = control_signals[8];
 assign             wen_i = control_signals[7];
@@ -164,18 +142,5 @@ assign             Halt = control_signals[4];
 assign             memread_i = control_signals[3];
 assign             memwrite_i = control_signals[2];
 assign             rf_sel = control_signals[1:0];
-
-// lookup table for driving wen_i;
-//lut lut1(
-//  .lut_addr(InstOut[8:6]),
-//  .lut_val(wen_i)//({dummy,wen_i})
-//);
-
-// commented out because we use different carry system
-//always_ff @(posedge clk)   // one-bit carry/shift
-//  if(carry_clr==1'b1)
-//    ov_i <= 1'b0;
-//  else if(carry_en==1'b1)
-//    ov_i <= ov_o;
 
 endmodule
