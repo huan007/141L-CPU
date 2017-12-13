@@ -6,14 +6,19 @@ module IF (
 	input [7:0] BranchOut,
 	input reset,
 	input halt,
-	input [7:0] clk,
+	input clk,
 	//input [7:0] newAddress,
 	output logic[7:0] core);
 	reg [7:0] AddressReg;
 
-	assign core = AddressReg;
+	//assign core = AddressReg;
+
+	initial 
+		AddressReg = 8'b0;
 
 	always_ff @ (posedge clk)
+	begin
+		core <= AddressReg;
 		if(reset)
 			AddressReg <= 0;
 		else if (halt)
@@ -32,4 +37,5 @@ module IF (
 		else
 			AddressReg <= AddressReg + 1; //normal advance
 		//	core <= newAddress;
+	end
 endmodule
