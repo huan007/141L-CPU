@@ -2,40 +2,40 @@
 module IF (
 	input branchsig,
 	input branchtype,
-	input cmp,
+	input signed [7:0] cmp,
 	input [7:0] BranchOut,
 	input reset,
 	input halt,
 	input clk,
-	//input [7:0] newAddress,
 	output logic[7:0] core);
-	reg [7:0] AddressReg;
 
-	//assign core = AddressReg;
-
-	initial 
-		AddressReg = 8'b0;
-
-	always_ff @ (posedge clk)
-	begin
-		core <= AddressReg;
-		if(reset)
-			AddressReg <= 0;
-		else if (halt)
-			AddressReg <= AddressReg;
-		else if (branchsig==1'b1) //if branch instruction
-			if(branchtype==1'b0)
-				if(cmp<2'h00)
-					AddressReg <= AddressReg + BranchOut;
-				else
-					AddressReg <= AddressReg + 1; //blt
-			else
-				if(cmp!=2'h00)
-					AddressReg <= AddressReg + BranchOut;
-				else
-					AddressReg <= AddressReg + 1; //bne
-		else
-			AddressReg <= AddressReg + 1; //normal advance
-		//	core <= newAddress;
+	always_ff @ (posedge clk) begin
+		if(reset) begin
+			core <= 0;
+			end
+		else if (halt) begin
+			core <= core;
+			end
+		else if (branchsig==1'b1) begin //if branch instruction
+			if(branchtype==1'b0) begin
+				if($signed(cmp)<$signed(8'h00)) begin
+					core <= core + BranchOut;
+					end
+				else begin
+					core <= core + 1; //blt
+					end
+				end
+			else begin
+				if(cmp!=8'h00) begin
+					core <= core + BranchOut;
+					end
+				else begin
+					core <= core + 1; //bne
+					end
+				end
+			end
+		else begin
+			core <= core + 1; //normal advance
+			end
 	end
 endmodule

@@ -1,18 +1,22 @@
 module PC_Inst_bench ();
 	bit clk, reset = 1;
-	bit halt = 1'b0;	
-	wire unsigned [7:0] PCOut;	
+	bit halt = 1'b0;
+	bit branchsig = 1;
+	bit branchtype = 1;
+	wire [7:0] cmp = 8'h01;
+	wire unsigned [7:0] PCOut;
 	wire unsigned [8:0] nextPC;
 	wire [8:0] romIn = {0, PCOut};
 	wire [8:0] romOut;
-	
-	assign nextPC = {0,PCOut} + 1;
 
 	IF IF1(
+	.branchsig(branchsig),
+	.branchtype(branchtype),
+	.cmp(cmp),
+	.BranchOut(BranchOut),
 	.reset(reset),
 	.halt(halt),
 	.clk(clk),
-	.newAddress(nextPC[7:0]),
 	.core(PCOut));
 
 	InstROM rom1(

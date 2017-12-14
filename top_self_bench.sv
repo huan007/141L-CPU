@@ -1,11 +1,8 @@
 module top_self_bench ();
 	bit clk, reset = 1;
-	bit halt = 1'b0;	
-	wire unsigned [7:0] PCOut;	
-	wire unsigned [8:0] nextPC;
+	bit halt = 1'b0;
+	wire unsigned [7:0] PCOut;
 	wire done;
-	
-	assign nextPC = {0,PCOut} + 1;
 
 	//Declare CPU
 	top cpu(

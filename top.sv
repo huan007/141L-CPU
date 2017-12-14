@@ -58,11 +58,11 @@ IF IF1(
   .reset    (reset   ),
   .halt     (Halt    ),
   .clk      (clk     ),
-//  .newAddress (      ), //TODO pointer to insr. mem how do we determine newAddress
   .core       (PC )
   );
 
 //COMPONENT: INSTRUCTION MEMORY
+//TODO: PC is only 8 bits but InstROM takes 9 bit instruction pointer?
 
 //InstROM (here by default)
 InstROM InstROM1(
