@@ -35,22 +35,22 @@ always_comb								  // no registers, no clocks
     //BLT: Does nothing ?
     //BNE: Does nothing ?
   ADD: begin
-        {carry_o, result_o} = rs_i + rt_i;
+        {carry_o, result_o} = $signed(rs_i) + $signed(rt_i);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
   ADDC: begin
-        {carry_o, result_o} = rs_i + rt_i;
+        {carry_o, result_o} = $signed(rs_i) + $signed(rt_i);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
   SUB: begin
-        {carry_o, result_o} = rs_i - rt_i;
+        {carry_o, result_o} = $signed(rs_i) - $signed(rt_i);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
   SUBC: begin
-        {carry_o, result_o} = rs_i - rt_i;
+        {carry_o, result_o} = $signed(rs_i) - $signed(rt_i);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
@@ -100,7 +100,7 @@ always_comb								  // no registers, no clocks
         neg_o = result_o[7];
         end
   CMP: begin
-        cmp = rs_i - rt_i;
+        cmp = $signed(rs_i) - $signed(rt_i);
         zero_o = result_o || 'd0;
         neg_o = result_o[7];
         end
