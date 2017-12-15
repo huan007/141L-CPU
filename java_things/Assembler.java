@@ -90,11 +90,11 @@ public class Assembler {
 						code += rs_rt(line);
 						break;
 					case "lw":
-						code = "01100";
+						code = "01101";
 						code += rs_rt(line);
 						break;
 					case "sw":
-						code = "01101";
+						code = "01100";
 						code += rs_rt(line);
 						break;
 					case "alw":
@@ -106,7 +106,7 @@ public class Assembler {
 						code += register(line[1]);
 						break;
 					case "halt":
-						code = "01111000";
+						code = "01110000";
 						code += line[1];
 						break;
 					default:

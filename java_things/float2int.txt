@@ -134,4 +134,7 @@ imme $r0 25 //Signloc
 lw $r0 $r0
 imme $r1 27 //MSHend
 sw $r0 $r1
+imme $r0, 0
+imme $r1 26 //LSHend
+sw $r0, $r1
 halt 1
