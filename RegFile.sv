@@ -19,6 +19,16 @@ logic [DW-1:0] RF [2**count];
 assign rs_val_o = RF [{0,rs}];
 assign rt_val_o = RF [rt];
 
+initial begin
+	RF[0] = 8'h00;
+	RF[1] = 8'h00;
+	RF[2] = 8'h00;
+	RF[3] = 8'h00;
+	RF[4] = 8'h00;
+	RF[5] = 8'h00;
+	RF[6] = 8'h00;
+	RF[7] = 8'h00;
+end
 //synchronous (clocked) write to rs 
 always_ff @ (posedge clk)
   begin

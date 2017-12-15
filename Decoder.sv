@@ -25,6 +25,12 @@ begin
 			//special_reg = 1'bx;
 			temp_mem = 1'bx;
 		end
+		
+		//CMP
+		8'b01110???: begin
+			control_signals = decoder_rom[7];
+			temp_mem = 1'bx;
+		end
 
 		//IMME
 		8'b10??????: begin

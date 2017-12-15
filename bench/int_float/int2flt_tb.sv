@@ -18,7 +18,7 @@ module int2flt_tb();
               score2,		 // your DUT vs. mine
 			  count;         // number of trials
   int2flt f2(.*);	         // instantiate dummy DUT
-  int2flt f3(				 // your DUT goes here
+  top f3(				 // your DUT goes here
     .clk  (clk),			 //  rename module & ports
 	.reset(reset),			 //  as necessary
     .done (done2));          
@@ -67,8 +67,8 @@ module int2flt_tb();
     reset = 1'b1;
 	f2.data_mem1.my_memory[1][7:0] = int_in[15:8];	 // load operands into memory
 	f2.data_mem1.my_memory[2][7:0] = int_in[ 7:0];
-	f3.data_mem1.my_memory[1][7:0] = int_in[15:8];	 // load operands into memory
-	f3.data_mem1.my_memory[2][7:0] = int_in[ 7:0];
+	f3.data_mem1.my_memory[0][7:0] = int_in[15:8];	 // load operands into memory
+	f3.data_mem1.my_memory[1][7:0] = int_in[ 7:0];
 	sgn            = int_in[15]; 
 	f2.data_mem1.my_memory[5][7]   = sgn;            // sign bit passes through
 	f3.data_mem1.my_memory[5][7]   = sgn;            // sign bit passes through

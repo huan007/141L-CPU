@@ -9,6 +9,9 @@ module IF (
 	input clk,
 	output logic[7:0] core);
 
+	initial 
+		core = 8'b0;
+
 	always_ff @ (posedge clk) begin
 		if(reset) begin
 			core <= 0;

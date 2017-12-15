@@ -1,0 +1,212 @@
+100101000	\\imme $r0 10 //A1LOC
+011010000	\\lw $r0 $r0
+100101001	\\imme $r1 10 //0x80
+101111110	\\imme $r2 31 (0x1f)
+100111111	\\imme $r3 15 //15 //ASIGNLOC
+010100001	\\and $r1 $r0
+011001101	\\sw $r1 $r3
+001010110	\\lslc $r2 $r1
+001010110	\\lslc $r2 $r1
+100000001	\\imme $r1 0
+000001001	\\add $r1 $r2
+010100010	\\and $r2 $r0
+101000111	\\imme $r3 17 //AEXPLOC
+001110110	\\lsrc $r2 $r1
+001110110	\\lsrc $r2 $r1
+011001110	\\sw $r2 $r3
+100001111	\\imme $r3 3
+010100011	\\and $r3 $r0
+100000100	\\imme $r0 1
+011100010	\\cmp $r2 $r0
+110010111	\\blt 23 ZERO (+3)
+100010000	\\imme $r0 4
+010110011	\\or $r3 $r0
+	\\ZERO
+101011000	\\imme $r0 22 //AMANU ZERO
+011000011	\\sw $r3 $r0
+	\\// NOW LOAD IN B1
+100110000	\\imme $r0 12 //b1LOC
+011010000	\\lw $r0 $r0
+010100001	\\and $r1 $r0
+001110101	\\lsrc $r1 $r1
+001110101	\\lsrc $r1 $r1
+101001011	\\imme $r3 18 //BEXPLOC
+011001101	\\sw $r1 $r3
+100101010	\\imme $r2 10 //0x80
+010100010	\\and $r2 $r0
+101000011	\\imme $r3 16 //BSIGNLOC
+011001110	\\sw $r2 $r3
+100001110	\\imme $r2 3
+010101000	\\and $r0 $r2
+100000110	\\imme $r2 1
+011101001	\\cmp $r1 $r2
+110010111	\\blt 23 ZERO (+3)
+100010010	\\imme $r2 4
+010111000	\\or $r0 $r2
+	\\ZERO
+101101011	\\imme $r3 26 //BMANU ZERO
+011001100	\\sw $r0 $r3
+101000100	\\imme $r0 17 //AEXPLOC
+011010000	\\lw $r0 $r0
+000100100	\\sub $r0 $r1
+100000001	\\imme $r1 0
+100101110	\\imme $r2 11 //A2LOC
+011011010	\\lw $r2 $r2
+101011111	\\imme $r3 23 //AMANL
+011001110	\\sw $r2 $r3
+100110110	\\imme $r2 13 //b2LOC
+011011010	\\lw $r2 $r2
+101101111	\\imme $r3 27 //BMANL
+011001110	\\sw $r2 $r3
+011100100	\\cmp $r0 $r1
+110011000	\\blt 24 BLARGE (+37)
+011100001	\\cmp $r1 $r0
+110011001	\\blt 25 ALARGE (+4)
+100000110	\\imme $r2 1
+011101001	\\cmp $r1 $r2
+111011010	\\bne 26 EQUAL
+	\\ALARGE // Shift B
+101101011	\\imme $r3 26 //BMANU ALARGE
+011011111	\\lw $r3 $r3
+	\\BSHIFT:
+001110111	\\lsrc $r3 $1 BSHIFT
+001111110	\\lsrc $r2 $r3
+000011101	\\addc $r1 $r3
+011111101	\\asw $r1
+101101001	\\imme $r1 26 //BMANU
+011000111	\\sw $R3 $r1
+100111011	\\imme $r3 14 /sloc
+011011111	\\lw $r3 $r3
+011111001	\\alw $r1
+000000111	\\add $r3 $r1
+100111001	\\imme $r1 14 /sloc
+011000111	\\sw $r3 $r1
+101101011	\\imme $r3 26 //BMANU
+011011111	\\lw $r3 $r3
+100000001	\\imme $r1 0
+000110100	\\subc $r0 $1
+011100100	\\cmp $r0 $r1
+111011011	\\bne 27 BSHIFT (-17)
+101101000	\\imme $r0 26 //BMANU
+011000011	\\sw $r3 $r0
+101101100	\\imme $r0 27 //BMANL
+011000010	\\sw $r2 $r0
+100111000	\\imme $r0 14 /sloc
+011010011	\\lw $r3 $r0
+011111010	\\alw $r2
+000101011	\\sub $r3 $r2
+011000011	\\sw $r3 $r0
+011100100	\\cmp $r0 $r1
+111011100	\\bne 28 EQUAL
+	\\BLARGE // shift a right
+101000101	\\imme $r1 17 //AEXPLOC BLARGE
+101001011	\\imme $r3 18 //BEXPLOC
+011011111	\\lw $r3 $r3
+011000111	\\sw $r3 $r1 // replace AEXP with BEXP
+100000001	\\imme $r1 0
+101011011	\\imme $r3 22 //AMANU
+101011110	\\imme $r2 23 //AMANL
+011011010	\\lw $r2 $r2
+011011111	\\lw $r3 $r3
+	\\ASHIFT
+001110111	\\lsrc $r3 $r1 ASHIFT
+001111110	\\lsrc $r2 $r3
+000011101	\\addc $r1 $r3
+011111101	\\asw $r1
+101011001	\\imme $r1 22 //AMANU
+011000111	\\sw $R3 $r1
+100111011	\\imme $r3 14 /sloc
+011011111	\\lw $r3 $r3
+011111001	\\alw $r1
+000000111	\\add $r3 $r1
+100111001	\\imme $r1 14 /sloc
+011000111	\\sw $r3 $r1
+101011011	\\imme $r3 22 //AMANU
+011011111	\\lw $r3 $r3
+100000001	\\imme $r1 0
+000010100	\\addc $r0 $r1
+011100100	\\cmp $r0 $r1
+111011101	\\bne 29 ASHIFT (-4)
+101011000	\\imme $r0 22 //AMANU
+011000011	\\sw $r3 $r0
+101011100	\\imme $r0 23 //AMANL
+011000010	\\sw $r2 $r0
+100111000	\\imme $r0 14 /sloc
+011010011	\\lw $r3 $r0
+011111010	\\alw $r2
+000101011	\\sub $r3 $r2
+011000011	\\sw $r3 $r0
+	\\EQUAL
+100111100	\\imme $r0 15 //ASIGNLOC EQUAL
+101000001	\\imme $r1 16 //BSIGNLOC
+011010000	\\lw $r0 $r0
+011010101	\\lw $r1 $r1
+011100100	\\cmp $r0 $r1
+111011110	\\bne 30 SUBTRACT (+52)
+	\\ADDITION
+101011000	\\imme $r0 22 //AMANU ADDITION
+101011101	\\imme $r1 23 //AMANL
+101101010	\\imme $r2 26 //BMANU
+101101111	\\imme $r3 27 //BMANL
+011010000	\\lw $r0 $r0
+011010101	\\lw $r1 $r1
+011011010	\\lw $r2 $r2
+011011111	\\lw $r3 $r3
+000001101	\\add $r1 $r3
+000011100	\\addc $r0 $r3
+000001000	\\add $r0 $r2
+011111011	\\alw $r3
+100000110	\\imme $r2 1
+011101110	\\cmp $r2 $r3
+111011111	\\bne 31 NOROUND (+13)
+010100110	\\and $r2 $r1
+100111011	\\imme $r3 14 /sloc
+011011111	\\lw $r3 $r3
+000001011	\\add $r3 $r2
+100000010	\\imme $r2 0
+011101011	\\cmp $r3 $r2
+111100000	\\bne 32 ROUND (+4)
+100000111	\\imme $r3 1
+011101011	\\cmp $r3 $r2
+111100001	\\bne 33 NOROUND (+3)
+	\\ROUND
+000010101	\\addc $r1 $r1 round
+000011100	\\addc $r0 $r3
+	\\NOROUND
+011111101	\\asw $r1 NOROUND
+101000111	\\imme $r3 17 //AEXPLOC
+011011111	\\lw $r3 $r3
+100100010	\\imme $r2 8
+100100001	\\imme $r1 8
+010100010	\\and $r2 $r0
+011100110	\\cmp $r2 $r1
+111100010	\\bne 34 NOOVERFLOW (+6)
+	\\OVERFLOW
+	\\// Shift right and add 1 to AEXP
+011111001	\\alw $r1 OVERFLOW
+001110100	\\lsrc $r0 $r1
+001111101	\\lsrc $r1 $r3
+011111101	\\asw $r1
+000010111	\\addc $r3 $r1
+	\\NOOVERFLOW
+011111001	\\alw $r1 NOOVERFLOW
+101010110	\\imme $r2 21 /C2loc
+011001001	\\sw $r1 $r2
+001010111	\\lslc $r3 $r1
+001010111	\\lslc $r3 $r1
+100001110	\\imme $r2 3
+010101000	\\and $r0 $r2
+010111100	\\or $r0 $r3
+100111101	\\imme $r1 15 //ASIGNLOC
+011010101	\\lw $r1 $r1
+010110100	\\or $r0 $r1
+101010001	\\imme $r1 20 /C1loc
+011000100	\\sw $r0 $r1
+011100000	\\halt 0
+	\\SUBTRACT
+101001100	\\imme $r0 19 //FF SUBTRACT
+101010001	\\imme $r1 20 /C1loc
+101010110	\\imme $r2 21 /C2loc
+011000100	\\sw $r0 $r1
+011001000	\\sw $r0 $r2
+011100001	\\halt 1
