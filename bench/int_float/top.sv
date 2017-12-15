@@ -141,7 +141,7 @@ assign             branchtype_i = control_signals[8];
 assign             wen_i = control_signals[7];
 assign             coutwen_i = control_signals[6];
 //TODO isn't reset an input
-assign             reset = control_signals[5];
+//assign             reset = control_signals[5];
 assign             Halt = control_signals[4];
 assign             memread_i = control_signals[3];
 assign             memwrite_i = control_signals[2];
@@ -158,7 +158,7 @@ initial begin
 	rf1.RF[6] = 8'h00;
 	rf1.RF[7] = 8'h00;
   	//Set done signal equals to Halt signal
-  	assign done = Halt;
+  	assign done = Halt & ~reset;
 end
 
 endmodule

@@ -8,7 +8,7 @@ module branchLUT #(parameter IW=6, OW=8) (
 	logic [OW-1:0] inst_rom [2**IW];
 
 	initial
-		$readmemb("branch.txt", inst_rom);
+		$readmemh("branch_hex.txt", inst_rom);
 
 	//Look up table
 	assign BranchOut = inst_rom[InstAddress];

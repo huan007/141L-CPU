@@ -25,10 +25,10 @@ module flt2int_tb();
 	.reset_i (reset),
 	.done_o  (done_test));
 
-  top_test_f2i t1(            // your DUT could go here
-    .clk_i     (clk  ),		  // retain my dummy, above
-	.reset_i   (reset),
-	.done_o    (done));
+  top_float2int t1(            // your DUT could go here
+    .clk     (clk  ),		  // retain my dummy, above
+	.reset   (reset),
+	.done    (done));
 
   initial begin
     score1 = 16'b0;

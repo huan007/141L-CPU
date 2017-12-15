@@ -4,7 +4,7 @@
 // Design Name:     CSE141L
 // Module Name:     top (top of sample microprocessor design)
 
-module top(
+module top_float2int(
   input clk,
         reset,
   output logic done
@@ -66,7 +66,7 @@ IF IF1(
 //TODO: PC is only 8 bits but InstROM takes 9 bit instruction pointer?
 
 //InstROM (here by default)
-InstROM_int2Float InstROM1(
+InstROM_float2Int InstROM1(
   .InstAddress (PC),	// address pointer
   .InstOut (InstOut));
 
