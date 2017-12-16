@@ -141,8 +141,8 @@ module fltflt_tb();
       score1 ++;
     if(flt3==flt3_test)					      // your DUT matches my dummy DUT
 	  score2 ++;           
-  	else
-		$stop;
+// 	else
+//		$stop;
 //    if(int_out == int1[14:0]) score2++;   
 	count ++;
 	$display("scores = %d, %d out of %d",score1,score2,count);

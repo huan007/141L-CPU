@@ -170,6 +170,7 @@ module int2flt_tb();
       $display("flt_out_dut = %b_%b_%b, flt_out3 = %b_%b_%b",
          flt_out2[15],flt_out2[14:10],flt_out2[9:0],flt_out3[15],flt_out3[14:10],flt_out3[9:0]);
       if((exp_dut == flt_out3[14:10])&&(mant_dut==flt_out3[9:0])) score2++;
+	  else $stop;
 	  if(flt_out2    == flt_out3) score1++;
     end
     else begin 	  			// normal, non-underflow
@@ -182,9 +183,12 @@ module int2flt_tb();
       $display("flt_out2=%b_%b_%b, flt_out3 = %b_%b_%b",
          flt_out2[15],flt_out2[14:10],flt_out2[9:0],flt_out3[15],flt_out3[14:10],flt_out3[9:0]);
       if((exp_dut[4:0] == flt_out3[14:10])&&(mant_dut[9:0] == flt_out3[9:0])) score2++;
+	  else $stop;
       if(flt_out2 == flt_out3) score1++;
 	end
     count++; 
+//	if (count > 7)
+//		$stop;
     $display("scores = %d, %d out of %d",score1,score2,count);
 	$display();
   endtask

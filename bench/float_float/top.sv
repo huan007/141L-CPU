@@ -9,7 +9,7 @@ module top_float2Float(
         reset,
   output logic done
 );
-  parameter IW = 8;				// program counter / instruction pointer
+  parameter IW = 16;				// program counter / instruction pointer
                             // TODO should this be 8
   parameter OW = 10;
   //logic signed[15:0] Offset = 16'd10;
@@ -18,6 +18,7 @@ module top_float2Float(
   wire[   7:0] rt_val_o,			// reg_file data outputs to ALU
                rs_val_o,			//
                result_o;			// ALU data output
+  wire[8:0] newPC = PC[7:0];
 
   //carry, neg, zero
   wire ov_o;
@@ -59,7 +60,7 @@ IF IF1(
   .reset    (reset   ),
   .halt     (Halt    ),
   .clk      (clk     ),
-  .core       (PC )
+  .core       (PC[7:0] )
   );
 
 //COMPONENT: INSTRUCTION MEMORY
@@ -67,7 +68,7 @@ IF IF1(
 
 //InstROM (here by default)
 InstROM_float2Float InstROM1(
-  .InstAddress (PC),	// address pointer
+  .InstAddress (PC[7:0]),	// address pointer
   .InstOut (InstOut));
 
 decoder decoder1 (

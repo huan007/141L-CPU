@@ -23,7 +23,7 @@ typedef enum logic[7:0] {
   SW = 		8'b01100???,
   ALW = 	8'b0111110?,
   ASW = 	8'b0111111?,
-  HALT = 	8'b01110000
+  HALT = 	8'b01111000
 } op_code;
 
 endpackage // defintions

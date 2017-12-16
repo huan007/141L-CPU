@@ -20,7 +20,7 @@ begin
 	//Generate control signals
 	casez (instruction)
 		//HALT
-		8'b01110000: begin
+		8'b01111000: begin
 			control_signals = decoder_rom[6];
 			//special_reg = 1'bx;
 			temp_mem = 1'bx;
@@ -69,7 +69,7 @@ begin
 			temp_mem = 1;
 		end
 		//ASW
-		8'b0111111?: begin
+		8'b011111??: begin
 			control_signals = decoder_rom[5];
 			//special_reg = 1'bx;
 			temp_mem = 1;

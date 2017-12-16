@@ -7,10 +7,10 @@ module IF (
 	input reset,
 	input halt,
 	input clk,
-	output logic[7:0] core);
+	output logic[15:0] core);
 
 	initial 
-		core = 8'b0;
+		core = 16'b0;
 
 	always_ff @ (posedge clk) begin
 		if(reset) begin
@@ -22,7 +22,7 @@ module IF (
 		else if (branchsig==1'b1) begin //if branch instruction
 			if(branchtype==1'b0) begin
 				if($signed(cmp)<$signed(8'h00)) begin
-					core <= core + BranchOut;
+					core <= $signed(core) + $signed(BranchOut);
 					end
 				else begin
 					core <= core + 1; //blt
@@ -30,7 +30,7 @@ module IF (
 				end
 			else begin
 				if(cmp!=8'h00) begin
-					core <= core + BranchOut;
+					core <= $signed(core) + $signed(BranchOut);
 					end
 				else begin
 					core <= core + 1; //bne

@@ -36,33 +36,33 @@ always_comb								  // no registers, no clocks
     //BLT: Does nothing ?
     //BNE: Does nothing ?
   		ADD: begin
-  		      {carry_o, result_o} = $signed(rs_i) + $signed(rt_i);
+  		      {carry_o, result_o} = $signed({0,rs_i}) + $signed({0, rt_i});
   		      zero_o = result_o || 'd0;
   		      neg_o = result_o[7];
   		      end
   		ADDC: begin
-  		      {carry_o, result_o} = $signed(rs_i) + $signed(rt_i);
+  		      {carry_o, result_o} = $signed({0,rs_i}) + $signed({0,rt_i});
   		      zero_o = result_o || 'd0;
   		      neg_o = result_o[7];
   		      end
   		SUB: begin
-  		      {carry_o, result_o} = $signed(rs_i) - $signed(rt_i);
+  		      {carry_o, result_o} = $signed({rs_i[7], rs_i}) - $signed({rt_i[7], rt_i});
   		      zero_o = result_o || 'd0;
   		      neg_o = result_o[7];
   		      end
   		SUBC: begin
-  		      {carry_o, result_o} = $signed(rs_i) - $signed(rt_i);
+  		      {carry_o, result_o} = $signed({rs_i[7],rs_i}) - $signed({rt_i[7], rt_i});
   		      zero_o = result_o || 'd0;
   		      neg_o = result_o[7];
   		      end
   		LSL: begin
-  		      {carry_o, result_o} = rs_i << rt_i;
+  		      {carry_o, result_o} = {0,rs_i} << rt_i;
   		      zero_o = result_o || 'd0;
   		      neg_o = result_o[7];
   		      end
   		LSLC: begin
   		      if (rt == 2'b11) {carry_o, result_o} = (rs_i << 1) | rt_i;
-  		      else {carry_o, result_o} = rs_i << rt_i;
+  		      else {carry_o, result_o} = {0,rs_i} << rt_i;
   		      zero_o = result_o || 'd0;
   		      neg_o = result_o[7];
   		      end
