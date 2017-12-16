@@ -18,7 +18,7 @@ module int2flt_tb();
               score2,		 // your DUT vs. mine
 			  count;         // number of trials
   int2flt f2(.*);	         // instantiate dummy DUT
-  top f3(				 // your DUT goes here
+  top_int2Float f3(				 // your DUT goes here
     .clk  (clk),			 //  rename module & ports
 	.reset(reset),			 //  as necessary
     .done (done2));          

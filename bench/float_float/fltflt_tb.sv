@@ -39,7 +39,7 @@ module fltflt_tb();
 	.reset (reset),
 	.done  (done_test));
 
-  fltflt t1     (                 // your DUT would go here
+  top_float2Float t1     (                 // your DUT would go here
     .clk     (clk  ),		      // retain my dummy, above
 	.reset   (reset),			  // rename ports and module fltflt
 	.done    (done));			  //  to those in your design
@@ -141,6 +141,8 @@ module fltflt_tb();
       score1 ++;
     if(flt3==flt3_test)					      // your DUT matches my dummy DUT
 	  score2 ++;           
+  	else
+		$stop;
 //    if(int_out == int1[14:0]) score2++;   
 	count ++;
 	$display("scores = %d, %d out of %d",score1,score2,count);

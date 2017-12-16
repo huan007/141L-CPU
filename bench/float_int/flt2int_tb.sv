@@ -96,13 +96,15 @@ module flt2int_tb();
           ((real'(flt_mant)/1024)*2**flt_exp)); 
     end       
     if(flt_sign)
-      $display("output = -%d -%b",int_out[14:0],int_out[14:0]);
+      $display("output = -%d -%b",int_out[14:0],int1[14:0]);
     else   
-	  $display("output = %d   %b",int_out[14:0],int_out[14:0]);
+	  $display("output = %d   %b",int_out[14:0],int1[14:0]);
     $display("%d %d",int_out,(real'(flt_mant)/1024)*2**flt_exp);		 
 	if(int_out - (real'(flt_mant)/1024)*2**flt_exp < 2)
       score1 ++;
     if(int_out == int1[14:0]) score2++;   
+	//else
+	//	$stop;
 	$display("scores = %d %d",score1,score2);
 	$display();	                        // blank line feed for readability
 	#20ns reset = 1'b1;
