@@ -106,7 +106,7 @@ public class Assembler {
 						code += register(line[1]);
 						break;
 					case "halt":
-						code = "01110000";
+						code = "01111000";
 						code += line[1];
 						break;
 					default:

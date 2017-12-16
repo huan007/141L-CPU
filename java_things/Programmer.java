@@ -180,6 +180,9 @@ public class Programmer {
 
 	private static void fillMem() {
 		MEM = new byte[256];
+		for (int m = 0; m < 256; m++) {
+			MEM[m] = (byte)0xFF;
+		}
 
 		Random rn = new Random();
 		int r0 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
@@ -188,11 +191,14 @@ public class Programmer {
 		int r2 = rn.nextInt(MINMAX) | sign;
 		int r3 = rn.nextInt(MINMAX) | (rn.nextInt(2) << 15);
 
-		f2i = new Programmer().new Half(r0).getbytes();
-		add_a = new Programmer().new Half(r1).getbytes();
+		// f2i = new Programmer().new Half(r0).getbytes();
+		// add_a = new Programmer().new Half((byte)0x1a, (byte)0x04).getbytes();
 		// add_b = new Programmer().new Half(r1).getbytes();
-		add_b = new Programmer().new Half(r2).getbytes();
+		// add_b = new Programmer().new Half((byte)0x1a, (byte)0x04).getbytes();
 		i2f = new byte[] {(byte)((r3 & 0xff00) >> 8), (byte)(r3 & 0xFF)};
+		f2i = new byte[] {(byte)(0xe3), (byte)(0x01)};
+		add_a = new byte[] {(byte)(0x1a), (byte)(0x04)};
+		add_b = new byte[] {(byte)(0x1a), (byte)(0x04)};
 		// i2f = new byte[] {(byte) 0x080, 0};
 
 
@@ -390,7 +396,7 @@ public class Programmer {
 			default:
 				break;
 		}
-		System.out.printf("R0: %2x\tR1: %2x\tR2: %2x\tR3: %2x\tCout: %d\tCMP: %d\t\tCommand: %s\n", reg[0], reg[1], reg[2], reg[3], creg[C], CMP, l);
+		System.out.printf("%d R0: %2x\tR1: %2x\tR2: %2x\tR3: %2x\tCout: %d\tCMP: %d\t\tCommand: %s\n", PC+1, reg[0], reg[1], reg[2], reg[3], creg[C], CMP, l);
 
 	}
 

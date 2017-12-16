@@ -1,3 +1,6 @@
+imme $r0 0
+imme $r1 14 //Sloc
+sw $r0 $r1
 imme $r0 22 //MSHLoc
 lw $r0 $r0
 imme $r2 1
