@@ -25,8 +25,8 @@ initial begin
 	RF[2] = 8'h00;
 	RF[3] = 8'h00;
 	RF[4] = 8'h00;
-	RF[5] = 8'h00;
-	RF[6] = 8'h00;
+	RF[5] = 8'h01;
+	RF[6] = 8'h07;
 	RF[7] = 8'h00;
 end
 //synchronous (clocked) write to rs 

@@ -4,12 +4,12 @@
 // Design Name:     CSE141L
 // Module Name:     top (top of sample microprocessor design)
 
-module top_float2int(
+module top_float2Int(
   input clk,
         reset,
   output logic done
 );
-  parameter IW = 8;				// program counter / instruction pointer
+  parameter IW = 16;				// program counter / instruction pointer
                             // TODO should this be 8
   parameter OW = 10;
   //logic signed[15:0] Offset = 16'd10;
@@ -18,6 +18,7 @@ module top_float2int(
   wire[   7:0] rt_val_o,			// reg_file data outputs to ALU
                rs_val_o,			//
                result_o;			// ALU data output
+  wire[8:0] newPC = PC[7:0];
 
   //carry, neg, zero
   wire ov_o;
@@ -59,7 +60,7 @@ IF IF1(
   .reset    (reset   ),
   .halt     (Halt    ),
   .clk      (clk     ),
-  .core       (PC )
+  .core       (PC[7:0] )
   );
 
 //COMPONENT: INSTRUCTION MEMORY
@@ -67,7 +68,7 @@ IF IF1(
 
 //InstROM (here by default)
 InstROM_float2Int InstROM1(
-  .InstAddress (PC),	// address pointer
+  .InstAddress (PC[7:0]),	// address pointer
   .InstOut (InstOut));
 
 decoder decoder1 (
@@ -146,19 +147,19 @@ assign             Halt = control_signals[4];
 assign             memread_i = control_signals[3];
 assign             memwrite_i = control_signals[2];
 assign             rf_sel = control_signals[1:0];
+//Set done signal equals to Halt signal
+assign done = Halt & ~reset;
 
 //Initialize regFile
 initial begin
-	rf1.RF[0] = 8'h00;
-	rf1.RF[1] = 8'h00;
-	rf1.RF[2] = 8'h00;
-	rf1.RF[3] = 8'h00;
-	rf1.RF[4] = 8'h00;
-	rf1.RF[5] = 8'h00;
-	rf1.RF[6] = 8'h00;
-	rf1.RF[7] = 8'h00;
-  	//Set done signal equals to Halt signal
-  	assign done = Halt & ~reset;
+//	rf1.RF[0] = 8'h00;
+//	rf1.RF[1] = 8'h00;
+//	rf1.RF[2] = 8'h00;
+//	rf1.RF[3] = 8'h00;
+//	rf1.RF[4] = 8'h00;
+//	rf1.RF[5] = 8'h00;
+//	rf1.RF[6] = 8'h00;
+//	rf1.RF[7] = 8'h00;
 end
 
 endmodule
