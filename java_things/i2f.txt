@@ -16,7 +16,7 @@ imme $r2 22 //64, 0x40
 and $r2 $r0
 imme $r3 0
 cmp $r2 $r3
-bne 16 STOPLOOP (+10)
+bne 16 STOPLOOP (+9)
 //shift left and decrement exp
 lslc $r1 $r1
 lslc $r0 $r3
@@ -25,7 +25,7 @@ subc $r3 $r1
 asw $r3
 imme $r2 0
 cmp $r2 $r3
-bne 17 LOOP (-13)
+bne 17 LOOP (-12)
 STOPLOOP
 imme $r2 8
 imme $r3 8
