@@ -25,7 +25,7 @@ module flt2int_tb();
 	.reset_i (reset),
 	.done_o  (done_test));
 
-  top_float2int t1(            // your DUT could go here
+  top_float2Int t1(            // your DUT could go here
     .clk     (clk  ),		  // retain my dummy, above
 	.reset   (reset),
 	.done    (done));

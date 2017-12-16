@@ -1,0 +1,189 @@
+# what's feeding the case 0000000000000000
+# flt_out_dut =     0 = 0.000000 * 2** 0 flt_out2=0  0 0000000000
+# flt_out_dut = 0_00000_0000000000, flt_out3 = 0_00000_0000000000
+# scores =     1,     1 out of     1
+#  
+# preround exp = 15
+# postround exp = 15
+# what's feeding the case 0000000000000001
+# flt_out_dut =     1 = 1.000000 * 2**15 flt_out2=0 15 0000000000
+# flt_out_dut = 0_01111_0000000000, flt_out3 = 0_01111_0000000000
+#     1 = 1.000000 * 2**         0 flt_out3=0          0 1.0000000000
+# flt_out2=0_01111_0000000000, flt_out3 = 0_01111_0000000000
+# scores =     2,     2 out of     2
+#  
+# preround exp = 16
+# postround exp = 16
+# what's feeding the case 0000000000000010
+# flt_out_dut =     2 = 1.000000 * 2**16 flt_out2=0 16 0000000000
+# flt_out_dut = 0_10000_0000000000, flt_out3 = 0_10000_0000000000
+#     2 = 1.000000 * 2**         1 flt_out3=0          1 1.0000000000
+# flt_out2=0_10000_0000000000, flt_out3 = 0_10000_0000000000
+# scores =     3,     3 out of     3
+#  
+# preround exp = 16
+# postround exp = 16
+# what's feeding the case 0000000000000011
+# flt_out_dut =     3 = 1.500000 * 2**16 flt_out2=0 16 1000000000
+# flt_out_dut = 0_10000_1000000000, flt_out3 = 0_10000_1000000000
+#     3 = 1.500000 * 2**         1 flt_out3=0          1 1.1000000000
+# flt_out2=0_10000_1000000000, flt_out3 = 0_10000_1000000000
+# scores =     4,     4 out of     4
+#  
+# preround exp = 18
+# postround exp = 18
+# what's feeding the case 0000000000001100
+# flt_out_dut =    12 = 1.500000 * 2**18 flt_out2=0 18 1000000000
+# flt_out_dut = 0_10010_1000000000, flt_out3 = 0_10010_1000000000
+#    12 = 1.500000 * 2**         3 flt_out3=0          3 1.1000000000
+# flt_out2=0_10010_1000000000, flt_out3 = 0_10010_1000000000
+# scores =     5,     5 out of     5
+#  
+# preround exp = 20
+# postround exp = 20
+# what's feeding the case 0000000000110000
+# flt_out_dut =    48 = 1.500000 * 2**20 flt_out2=0 20 1000000000
+# flt_out_dut = 0_10100_1000000000, flt_out3 = 0_10100_1000000000
+#    48 = 1.500000 * 2**         5 flt_out3=0          5 1.1000000000
+# flt_out2=0_10100_1000000000, flt_out3 = 0_10100_1000000000
+# scores =     6,     6 out of     6
+#  
+# preround exp = 27
+# renorm hit, exp = 27
+# postround exp = 28
+# what's feeding the case 0001111111111111
+# flt_out_dut =  8191 = 1.000000 * 2**28 flt_out2=0 28 0000000000
+# flt_out_dut = 0_11100_0000000000, flt_out3 = 0_11100_0000000000
+#  8191 = 1.000000 * 2**        13 flt_out3=0         13 1.0000000000
+# flt_out2=0_11100_0000000000, flt_out3 = 0_11100_0000000000
+# scores =     7,     7 out of     7
+#  
+# preround exp = 28
+# renorm hit, exp = 28
+# postround exp = 29
+# what's feeding the case 0011111111111111
+# flt_out_dut = 16383 = 1.000000 * 2**29 flt_out2=0 29 0000000000
+# flt_out_dut = 0_11101_0000000000, flt_out3 = 0_11101_0000000000
+# 16383 = 1.000000 * 2**        14 flt_out3=0         14 1.0000000000
+# flt_out2=0_11101_0000000000, flt_out3 = 0_11101_0000000000
+# scores =     8,     8 out of     8
+#  
+# preround exp = 29
+# renorm hit, exp = 29
+# postround exp = 30
+# what's feeding the case 0111111111111111
+# flt_out_dut = 32767 = 1.000000 * 2**30 flt_out2=0 30 0000000000
+# flt_out_dut = 0_11110_0000000000, flt_out3 = 0_11110_0000000000
+# 32767 = 1.000000 * 2**        15 flt_out3=0         15 1.0000000000
+# flt_out2=0_11110_0000000000, flt_out3 = 0_11110_0000000000
+# scores =     9,     9 out of     9
+#  
+# preround exp = 29
+# postround exp = 29
+# what's feeding the case 0111100000101111
+# flt_out_dut = 30767 = 1.877930 * 2**29 flt_out2=0 29 1110000011
+# flt_out_dut = 0_11101_1110000011, flt_out3 = 0_11101_1110000011
+# 30767 = 1.877930 * 2**        14 flt_out3=0         14 1.1110000011
+# flt_out2=0_11101_1110000011, flt_out3 = 0_11101_1110000011
+# scores =    10,    10 out of    10
+#  
+# preround exp = 25
+# postround exp = 25
+# what's feeding the case 0000010111101000
+# flt_out_dut =  1512 = 1.476563 * 2**25 flt_out2=0 25 0111101000
+# flt_out_dut = 0_11001_0111101000, flt_out3 = 0_11001_0111101000
+#  1512 = 1.476563 * 2**        10 flt_out3=0         10 1.0111101000
+# flt_out2=0_11001_0111101000, flt_out3 = 0_11001_0111101000
+# scores =    11,    11 out of    11
+#  
+# preround exp = 20
+# postround exp = 20
+# what's feeding the case 0000000000101011
+# flt_out_dut =    43 = 1.343750 * 2**20 flt_out2=0 20 0101100000
+# flt_out_dut = 0_10100_0101100000, flt_out3 = 0_10100_0101100000
+#    43 = 1.343750 * 2**         5 flt_out3=0          5 1.0101100000
+# flt_out2=0_10100_0101100000, flt_out3 = 0_10100_0101100000
+# scores =    12,    12 out of    12
+#  
+# preround exp = 17
+# postround exp = 17
+# what's feeding the case 0000000000000100
+# flt_out_dut =     4 = 1.000000 * 2**17 flt_out2=0 17 0000000000
+# flt_out_dut = 0_10001_0000000000, flt_out3 = 0_10001_0000000000
+#     4 = 1.000000 * 2**         2 flt_out3=0          2 1.0000000000
+# flt_out2=0_10001_0000000000, flt_out3 = 0_10001_0000000000
+# scores =    13,    13 out of    13
+#  
+# preround exp = 24
+# postround exp = 24
+# what's feeding the case 0000001010010000
+# flt_out_dut =   656 = 1.281250 * 2**24 flt_out2=0 24 0100100000
+# flt_out_dut = 0_11000_0100100000, flt_out3 = 0_11000_0100100000
+#   656 = 1.281250 * 2**         9 flt_out3=0          9 1.0100100000
+# flt_out2=0_11000_0100100000, flt_out3 = 0_11000_0100100000
+# scores =    14,    14 out of    14
+#  
+# preround exp = 29
+# postround exp = 29
+# what's feeding the case 0110011010000110
+# flt_out_dut = 26246 = 1.601563 * 2**29 flt_out2=0 29 1001101000
+# flt_out_dut = 0_11101_1001101000, flt_out3 = 0_11101_1001101000
+# 26246 = 1.601563 * 2**        14 flt_out3=0         14 1.1001101000
+# flt_out2=0_11101_1001101000, flt_out3 = 0_11101_1001101000
+# scores =    15,    15 out of    15
+#  
+# preround exp = 24
+# postround exp = 24
+# what's feeding the case 0000001100110100
+# flt_out_dut =   820 = 1.601563 * 2**24 flt_out2=0 24 1001101000
+# flt_out_dut = 0_11000_1001101000, flt_out3 = 0_11000_1001101000
+#   820 = 1.601563 * 2**         9 flt_out3=0          9 1.1001101000
+# flt_out2=0_11000_1001101000, flt_out3 = 0_11000_1001101000
+# scores =    16,    16 out of    16
+#  
+# preround exp = 17
+# postround exp = 17
+# what's feeding the case 0000000000000111
+# flt_out_dut =     7 = 1.750000 * 2**17 flt_out2=0 17 1100000000
+# flt_out_dut = 0_10001_1100000000, flt_out3 = 0_10001_1100000000
+#     7 = 1.750000 * 2**         2 flt_out3=0          2 1.1100000000
+# flt_out2=0_10001_1100000000, flt_out3 = 0_10001_1100000000
+# scores =    17,    17 out of    17
+#  
+# preround exp = 19
+# postround exp = 19
+# what's feeding the case 0000000000010010
+# flt_out_dut =    18 = 1.125000 * 2**19 flt_out2=0 19 0010000000
+# flt_out_dut = 0_10011_0010000000, flt_out3 = 0_10011_0010000000
+#    18 = 1.125000 * 2**         4 flt_out3=0          4 1.0010000000
+# flt_out2=0_10011_0010000000, flt_out3 = 0_10011_0010000000
+# scores =    18,    18 out of    18
+#  
+# preround exp = 25
+# postround exp = 25
+# what's feeding the case 0000011010010101
+# flt_out_dut =  1685 = 1.645508 * 2**25 flt_out2=0 25 1010010101
+# flt_out_dut = 0_11001_1010010101, flt_out3 = 0_11001_1010010101
+#  1685 = 1.645508 * 2**        10 flt_out3=0         10 1.1010010101
+# flt_out2=0_11001_1010010101, flt_out3 = 0_11001_1010010101
+# scores =    19,    19 out of    19
+#  
+# preround exp = 24
+# postround exp = 24
+# what's feeding the case 0000001110010011
+# flt_out_dut =   915 = 1.787109 * 2**24 flt_out2=0 24 1100100110
+# flt_out_dut = 0_11000_1100100110, flt_out3 = 0_11000_1100100110
+#   915 = 1.787109 * 2**         9 flt_out3=0          9 1.1100100110
+# flt_out2=0_11000_1100100110, flt_out3 = 0_11000_1100100110
+# scores =    20,    20 out of    20
+#  
+# preround exp = 28
+# postround exp = 28
+# what's feeding the case 0011011011100011
+# flt_out_dut = 14051 = 1.714844 * 2**28 flt_out2=0 28 1011011100
+# flt_out_dut = 0_11100_1011011100, flt_out3 = 0_11100_1011011100
+# 14051 = 1.714844 * 2**        13 flt_out3=0         13 1.1011011100
+# flt_out2=0_11100_1011011100, flt_out3 = 0_11100_1011011100
+# scores =    21,    21 out of    21
+#  
+# scores =    21    21 out of    21
